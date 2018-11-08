@@ -10,7 +10,7 @@ const morgan = require('morgan');
 // const models = require('./models');
 
 // API/routing
-// const apiRouter = require('./routes');
+const apiRouter = require('./routes');
 
 /**
  * Here I am specifying origin, allowed methods, and headers.
@@ -43,6 +43,8 @@ app.use(morgan('dev'));
  * Handles application/json content type
  */
 app.use(bodyParser.json());
+
+app.use('/api', apiRouter);
 
 /**
  * Handles requests for static files. In this case, I'm just saying 
