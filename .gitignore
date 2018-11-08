@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+.idea
+.vscode
+*.map
+log
+dist
+*/__tests__/
+coverage/
+docs/
