@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const port = process.env.NODE_PORT || 3000;
+const port = process.env.NODE_PORT || 8080;
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
