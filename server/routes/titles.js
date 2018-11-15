@@ -24,18 +24,18 @@ titlesRouter.route('/')
   .post(verifyAdminToken, async (req, res) => {
 
     const title = new Title();
-    title.name = req.body.name;
+    title.description = req.body.description;
 
-    if (!title.name) return res.status(400).send({
+    if (!title.description) return res.status(400).send({
       status: 400,
-      statusText: 'The title name is missing.'
+      statusText: 'The title description is missing.'
     });
 
     try {
       await title.save();
       return res.status(201).send({
         status: 201,
-        statusText: `Title '${title.name}' was created.`
+        statusText: `Title '${title.description}' was created.`
       });
     } catch (err) {
       
