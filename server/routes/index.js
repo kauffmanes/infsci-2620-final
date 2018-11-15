@@ -2,18 +2,20 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const config = require('../config');
+const Config = require('../config');
 
 /**
  * Database connection.
  */
-mongoose.connect(`mongodb://${config.DatabaseUser}:${config.DatabasePassword}@${config.DatabaseEndpoint}`, {
+mongoose.connect(`mongodb://${Config.DatabaseUser}:${Config.DatabasePassword}@${Config.DatabaseEndpoint}`, {
   useNewUrlParser: true,
   useCreateIndex: true
 });
 
 // routes
 const usersRouter = require('./users');
+const titlesRouter = require('./titles');
+const flagsRouter = require('./flags');
 
 // REST API
 const apiRouter = express.Router();
@@ -22,6 +24,8 @@ apiRouter
 
   // bind routes to handlers
   .get('/', (_, res) => res.send('API is up and running!'))
-  .use('/user', usersRouter);
+  .use('/users', usersRouter)
+  .use('/titles', titlesRouter)
+  .use('/flags', flagsRouter);
 
  module.exports = apiRouter;

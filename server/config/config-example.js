@@ -8,5 +8,7 @@
 module.exports = {
   dbUser: '',
   dbPassword: '',
-  dbEndpoint: ''
+  dbEndpoint: '',
+  tokenSecret: 'sdN4N32k7@*EGSajSnE*chE@4!!sdx5Ea@4V6ndL7@',
+  saltRounds: 12
 }
