@@ -3,6 +3,7 @@
 const express = require('express');
 const Title = require('../models/Title');
 const titlesRouter = express.Router();
+const { verifyAdminToken } = require('../utils/token');
 
 titlesRouter.route('/')
 
@@ -20,7 +21,7 @@ titlesRouter.route('/')
   })
 
   // create new title
-  .post(async (req, res) => {
+  .post(verifyAdminToken, async (req, res) => {
 
     const title = new Title();
     title.name = req.body.name;

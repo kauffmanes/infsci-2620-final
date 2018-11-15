@@ -15,7 +15,7 @@ const UserSchema = new Schema({
   employer:    { type: String, required: true },
   verified:    { type: Boolean, required: true, default: false },
   questions:   [{ type: Schema.Types.ObjectId, ref: 'Question' }],
-  accessLevel: [{ type: Schema.Types.ObjectId, ref: 'AccessLevel', default: 1 }]
+  accessLevel: { type: Schema.Types.ObjectId, ref: 'AccessLevel' }
 });
 
 // before a user is saved, hash the password if updated

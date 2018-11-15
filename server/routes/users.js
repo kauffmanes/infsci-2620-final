@@ -2,14 +2,15 @@
 
 const express = require('express');
 const User = require('../models/User');
+const AccessLevel = require('../models/AccessLevel');
 const usersRouter = express.Router();
 const Token = require('../utils/token');
 
 // endpoint: /api/users/
 usersRouter.route('/')
 
-  // register new user - does not require authentication
-  .post((req, res) => {
+  // register new user
+  .post(async (req, res) => {
 
     const user = new User();
     
@@ -20,32 +21,48 @@ usersRouter.route('/')
     user.employer = req.body.employer;
     user.title = req.body.titleId;
     user.displayName = req.body.displayName;
+    user.accessLevel = req.body.accessLevel;
 
     // do error handling on what's required
     if (!user.firstName || !user.lastName || !user.email || !user.password || !user.employer || !user.title || !user.displayName) {
       return res.status(400).send('All fields are required.');
     }
 
-    // save user
-    user.save((err) => {
+    // if none provided, default to regular user
 
-      if (err && err.name === 'MongoError' && err.code === 11000) {
-        return res.status(400).send({
-          status: 400,
-          statusText: 'A user with that email or display name already exists.'
-        });
-      }
+    try {
 
-      if (err) {
-        console.log(err);
-        return res.status(500).send({ status: 500, statusText: 'Unable to save user.' });
-      }
-      
-      return User.findById(user._id, (err, user) => {
-        if (err) { console.log(err); return res.status(500).send({ status: 500, statusText: 'Could not find newly created user.' }); }
-        return res.status(201).send(user);
-      })
-    });
+      const accessObj = await AccessLevel.findOne({
+        level: req.body.accessLevel || 1
+      });
+
+      user.accessLevel = accessObj;
+
+      // save user
+      user.save((err) => {
+
+        if (err && err.name === 'MongoError' && err.code === 11000) {
+          return res.status(400).send({
+            status: 400,
+            statusText: 'A user with that email or display name already exists.'
+          });
+        }
+
+        if (err) {
+          console.log(err);
+          return res.status(500).send({ status: 500, statusText: 'Unable to save user.' });
+        }
+        
+        return User.findById(user._id, (err, user) => {
+          if (err) { console.log(err); return res.status(500).send({ status: 500, statusText: 'Could not find newly created user.' }); }
+          return res.status(201).send(user);
+        })
+      });
+
+    } catch(err) {
+      console.log(err);
+      return res.status(500).send('Could not find that access level.');
+    }
 
   });
 

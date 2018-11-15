@@ -16,6 +16,7 @@ mongoose.connect(`mongodb://${Config.DatabaseUser}:${Config.DatabasePassword}@${
 const usersRouter = require('./users');
 const titlesRouter = require('./titles');
 const flagsRouter = require('./flags');
+const accessLevelsRouter = require('./accessLevels');
 
 // REST API
 const apiRouter = express.Router();
@@ -26,6 +27,7 @@ apiRouter
   .get('/', (_, res) => res.send('API is up and running!'))
   .use('/users', usersRouter)
   .use('/titles', titlesRouter)
+  .use('/access', accessLevelsRouter)
   .use('/flags', flagsRouter);
 
  module.exports = apiRouter;

@@ -3,6 +3,7 @@
 const express = require('express');
 const Flag = require('../models/Flag');
 const flagsRouter = express.Router();
+const { verifyAdminToken } = require('../utils/token');
 
 flagsRouter.route('/')
 
@@ -20,7 +21,7 @@ flagsRouter.route('/')
   })
 
   // create new title
-  .post(async (req, res) => {
+  .post(verifyAdminToken, async (req, res) => {
 
     const flag = new Flag();
 
