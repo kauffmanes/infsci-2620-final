@@ -1,25 +1,27 @@
 'use strict';
 
 const express = require('express');
+const mongoose = require('mongoose');
+const config = require('../config');
 
-// routers go here
 /**
- * Each router goes here. For example:
- * const usersRouter = require('./users);
- * 
- * This would handle all API calls relating to users.
+ * Database connection.
  */
+mongoose.connect(`mongodb://${config.DatabaseUser}:${config.DatabasePassword}@${config.DatabaseEndpoint}`, {
+  useNewUrlParser: true,
+  useCreateIndex: true
+});
 
-// creates a new router to handle all API calls
+// routes
+const usersRouter = require('./users');
+
+// REST API
 const apiRouter = express.Router();
 
-apiRouter.get('/', (_, res) => res.send('API is up and running!'));
+apiRouter
 
-/**
- * To add to this:
- * 
- * example:
- * apiRouter.use('/users', usersRouter);
- */
+  // bind routes to handlers
+  .get('/', (_, res) => res.send('API is up and running!'))
+  .use('/user', usersRouter);
 
  module.exports = apiRouter;
