@@ -56,7 +56,7 @@ if (process.env.NODE_ENV === 'production') {
      * named "dist". Depending how the frontend (if we use React, specific structure, etc)
      * this will change.
      */
-    app.use(express.static(path.join(__dirname, 'client/build')));
+    app.use(express.static(path.join(__dirname, '../client/build')));
 
     /**
      * If the incoming request doesn't match the api path (/api), 
