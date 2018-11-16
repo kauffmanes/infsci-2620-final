@@ -10,7 +10,7 @@
     "start": "node app.js",
     "start:concurrently": "concurrently \"yarn server\" \"yarn client\"",
     "server": "node app.js",
-    "heroku_postbuild": "cd client && yarn install && yarn build"
+    "heroku-postbuild": "cd client && yarn install && yarn build"
   },
   "engines": {
     "node": "10.13.0",
