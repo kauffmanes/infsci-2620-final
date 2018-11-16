@@ -12,7 +12,7 @@
     "server:debug": "node --inspect --inspect-brk server/app.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "client": "cd client && yarn start",
-    "heroku-postbuild": "cd client && yarn install && yarn install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "cd client && yarn install && yarn install --only=dev && npm run build"
   },
   "engines": {
     "node": "10.13.0",
