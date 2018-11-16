@@ -8,7 +8,7 @@ try {
     dbUser:       process.env.dbUser,
     dbPassword:   process.env.dbPassword,
     tokenSecret:  process.env.tokenSecret,
-    saltRounds:   process.env.saltRounds
+    saltRounds:   process.env.saltRounds ? parseInt(process.env.saltRounds, 10) : 12
   };
 }
 
