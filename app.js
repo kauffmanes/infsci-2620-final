@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const port = process.env.PORT || 5000; // if you change this, change it in package.json in client
+const port = process.env.PORT || 3001; // if you change this, change it in package.json in client
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
@@ -21,7 +21,7 @@ const apiRouter = require('./server/routes');
  */
 app.use((_, res, next) => {
     // only localhost can hit the API
-    res.setHeader('Access-Controll-Allow-Origin', 'localhost');
+    res.setHeader('Access-Control-Allow-Origin', 'localhost');
     res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
     next();
