@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server/app.js",
     "server": "nodemon server/app.js",
-    "heroku-postbuild": "cd client && yarn install && yarn build && cd ..",
+    "heroku-postbuild": "yarn --cwd ./client install && yarn --cwd ./client build",
     "server:debug": "node --inspect --inspect-brk server/app.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "client": "cd client && yarn start"
