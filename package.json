@@ -1,0 +1,26 @@
+{
+  "name": "infsci-2620-final",
+  "version": "1.0.0",
+  "description": "Final Project for INFSCI 2620",
+  "main": "index.js",
+  "repository": "https://github.com/kauffmanes/infsci-2620-final.git",
+  "author": "Emily Kauffman and Ashutosh Burde",
+  "license": "MIT",
+  "scripts": {
+    "server": "nodemon server/app.js",
+    "server:debug": "node --inspect --inspect-brk server/app.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "client": "cd client && yarn start",
+    "start": "node server/app.js",
+    "heroku-postbuild": "cd client && yarn install && yarn install --only=dev --no-shrinkwrap && yarn build"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.2",
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.0.1",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.3.12",
+    "morgan": "^1.9.1"
+  }
+}
