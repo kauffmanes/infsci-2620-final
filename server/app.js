@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const port = process.env.NODE_PORT || 8080;
+const port = 5000; // if you change this, change it in package.json in client
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
@@ -63,9 +63,9 @@ app.use(express.static(dist));
  * 
  * Again, assumes client has a dist folder with an index.html page.
  */
-app.get('*', (_, res) => {
-    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
-});
+// app.get('*', (_, res) => {
+//     res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+// });
 
 app.listen(port, err => {
     if (err) return console.error(err);

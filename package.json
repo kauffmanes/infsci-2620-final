@@ -7,12 +7,15 @@
   "author": "Emily Kauffman and Ashutosh Burde",
   "license": "MIT",
   "scripts": {
-    "server:start": "node server/app.js",
-    "server:debug": "node --inspect --inspect-brk server/app.js"
+    "server:start": "nodemon server/app.js",
+    "server:debug": "node --inspect --inspect-brk server/app.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server:start\" \"yarn client\"",
+    "client": "cd client && yarn start"
   },
   "dependencies": {
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
+    "concurrently": "^4.0.1",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.12",
