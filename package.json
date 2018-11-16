@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server/app.js",
     "server": "nodemon server/app.js",
-    "install": "cd client && yarn build && cd ..",
+    "install": "cd client && yarn install && yarn build && cd ..",
     "server:debug": "node --inspect --inspect-brk server/app.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "client": "cd client && yarn start"
