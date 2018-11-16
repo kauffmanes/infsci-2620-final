@@ -10,7 +10,7 @@
     "server": "node app.js",
     "server:debug": "node --inspect --inspect-brk app.js",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "client": "node start-client.js"
+    "heroku-postbuild": "node start-client.js"
   },
   "engines": {
     "node": "10.13.0",
