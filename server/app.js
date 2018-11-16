@@ -62,7 +62,7 @@ if (process.env.NODE_ENV === 'production') {
      * If the incoming request doesn't match the api path (/api), 
      * load the frontend index.html page and let frontend handle it.
      */
-    app.get('*', () => {
+    app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
 }
