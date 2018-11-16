@@ -23,3 +23,5 @@ Developing Secure Systems Final Project
 ## Deployed to Heroku
 1. `sudo snap install --classic heroku` (ubuntu)
 2. https://dashboard.heroku.com/apps/infsci-2620-final/deploy/heroku-git
+3. automatic deployments to heroku are enabled when merging to master
+4. 
