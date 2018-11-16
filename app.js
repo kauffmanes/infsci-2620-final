@@ -10,7 +10,7 @@ const morgan = require('morgan');
 // const models = require('./models');
 
 // API/routing
-const apiRouter = require('./routes');
+const apiRouter = require('./server/routes');
 
 /**
  * Here I am specifying origin, allowed methods, and headers.
@@ -56,7 +56,7 @@ if (process.env.NODE_ENV === 'production') {
      * named "dist". Depending how the frontend (if we use React, specific structure, etc)
      * this will change.
      */
-    app.use(express.static(path.join(__dirname, '../client/build')));
+    app.use(express.static(path.join(__dirname, 'client/build')));
 
     /**
      * If the incoming request doesn't match the api path (/api), 
@@ -65,9 +65,9 @@ if (process.env.NODE_ENV === 'production') {
     // app.get('*', (req, res) => {
     //     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     // });
-    app.get('/', function (req, res) {
+    app.get('*', function (req, res) {
         console.log(__dirname)
-        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
 }
 

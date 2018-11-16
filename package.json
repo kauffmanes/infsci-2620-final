@@ -7,8 +7,8 @@
   "author": "Emily Kauffman and Ashutosh Burde",
   "license": "MIT",
   "scripts": {
-    "server": "node server/app.js",
-    "server:debug": "node --inspect --inspect-brk server/app.js",
+    "server": "node app.js",
+    "server:debug": "node --inspect --inspect-brk app.js",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "client": "node start-client.js"
   },
