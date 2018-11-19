@@ -7,9 +7,10 @@
   "author": "Emily Kauffman and Ashutosh Burde",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently \"yarn server\" \"yarn client\"",
+    "start": "node app.js",
+    "start:concurrently": "concurrently \"yarn server\" \"yarn client\"",
     "server": "node app.js",
-    "client": "node start-client.js"
+    "heroku-postbuild": "cd client && yarn install && yarn build"
   },
   "engines": {
     "node": "10.13.0",
