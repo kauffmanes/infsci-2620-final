@@ -10,6 +10,7 @@
     "start": "node app.js",
     "start:concurrently": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node app.js",
+    "client": "cd client && npm run start",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "engines": {

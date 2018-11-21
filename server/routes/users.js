@@ -12,7 +12,6 @@ usersRouter
 
   // register new user
   .post(async (req, res) => {
-    console.log(req);
     const user = new User();
 
     user.firstName = req.body.firstName;
@@ -142,6 +141,21 @@ usersRouter.post("/authenticate", async (req, res) => {
       status: 500
     });
   }
+});
+
+// gets the token from the request, verifies it, and then returns that user's data
+usersRouter.get('/me', Token.verifyToken, (req, res) => {
+
+	User.findById(req.decoded.id)
+		.then(user => {
+			if (!user) {
+				return res.status(404).send('No user found.');
+			}
+			res.status(200).send(user);
+		})
+		.catch(err => {
+			res.status(500).send('Unable to find your information');
+		});
 });
 
 module.exports = usersRouter;

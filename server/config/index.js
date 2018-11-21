@@ -1,9 +1,11 @@
 let config = {};
 
 try {
-  config = require('./config');
+	config = require('./config');
+
 } catch(err) {
-  config = {
+  console.log(err)
+	config = {
     dbEndpoint:   process.env.dbEndpoint,
     dbUser:       process.env.dbUser,
     dbPassword:   process.env.dbPassword,
