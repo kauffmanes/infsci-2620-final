@@ -144,4 +144,19 @@ usersRouter.post("/authenticate", async (req, res) => {
   }
 });
 
+// gets the token from the request, verifies it, and then returns that user's data
+usersRouter.get('/me', Token.verifyToken, (req, res) => {
+
+	models.User.findById(req.decoded.id)
+		.then(user => {
+			if (!user) {
+				return res.status(404).send('No user found.');
+			}
+			res.status(200).send(user);
+		})
+		.catch(err => {
+			res.status(500).send('Unable to find your information');
+		});
+});
+
 module.exports = usersRouter;
