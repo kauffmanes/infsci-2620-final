@@ -157,4 +157,13 @@ usersRouter.get("/me", Token.verifyToken, (req, res) => {
     });
 });
 
+// @route   DELETE api/users/
+// @desc    Delete user
+// @access  Private
+usersRouter.delete("/", Token.verifyToken, (req, res) => {
+  User.findOneAndRemove({ _id: req.decoded.id }).then(() =>
+    res.json({ success: true })
+  );
+});
+
 module.exports = usersRouter;
