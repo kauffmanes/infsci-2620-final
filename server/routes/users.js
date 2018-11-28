@@ -22,6 +22,7 @@ usersRouter
     user.title = req.body.titleId;
     user.displayName = req.body.displayName;
     user.accessLevel = req.body.accessLevel;
+
     // do error handling on what's required
     if (
       !user.firstName ||
