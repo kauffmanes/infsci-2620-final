@@ -3,12 +3,12 @@
 const express = require('express');
 const AccessLevel = require('../models/AccessLevel');
 const accessLevelsRouter = express.Router();
-const { verifyAdminToken, verifyDeveloperToken } = require('../utils/token');
+const { verifyToken, verifyDeveloperToken } = require('../utils/token');
 
 accessLevelsRouter.route('/')
 
   // get all titles
-  .get(verifyAdminToken, async (_, res) => {
+  .get(verifyToken, async (_, res) => {
     try {
       const result = await AccessLevel.find({});
       return res.status(200).send(result);

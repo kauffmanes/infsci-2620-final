@@ -17,6 +17,8 @@ const usersRouter = require('./users');
 const titlesRouter = require('./titles');
 const flagsRouter = require('./flags');
 const accessLevelsRouter = require('./accessLevels');
+const questionsRouter = require('./questions');
+const answersRouter = require('./answers');
 
 // REST API
 const apiRouter = express.Router();
@@ -28,6 +30,8 @@ apiRouter
   .use('/users', usersRouter)
   .use('/titles', titlesRouter)
   .use('/access', accessLevelsRouter)
-  .use('/flags', flagsRouter);
+  .use('/flags', flagsRouter)
+  .use('/answers', answersRouter)
+  .use('/questions', questionsRouter);
 
  module.exports = apiRouter;

@@ -7,8 +7,8 @@ const { verifyAdminToken } = require('../utils/token');
 
 flagsRouter.route('/')
 
-  // get all titles
-  .get(async (req, res) => {
+  // get all flags
+  .get(async (_, res) => {
     try {
       const results = await Flag.find({});
       return res.status(200).send(results);
@@ -20,7 +20,7 @@ flagsRouter.route('/')
     }
   })
 
-  // create new title
+  // create new flag
   .post(verifyAdminToken, async (req, res) => {
 
     const flag = new Flag();

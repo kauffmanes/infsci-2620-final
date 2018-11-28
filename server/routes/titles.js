@@ -3,12 +3,12 @@
 const express = require('express');
 const Title = require('../models/Title');
 const titlesRouter = express.Router();
-const { verifyAdminToken } = require('../utils/token');
+const { verifyToken, verifyAdminToken } = require('../utils/token');
 
 titlesRouter.route('/')
 
   // get all titles
-  .get(async (_, res) => {
+  .get(verifyToken, async (_, res) => {
     try {
       const result = await Title.find({});
       return res.status(200).send(result);
@@ -28,7 +28,7 @@ titlesRouter.route('/')
 
     if (!title.description) return res.status(400).send({
       status: 400,
-      statusText: 'The title description is missing.'
+      statusText: 'The title description field is missing.'
     });
 
     try {
