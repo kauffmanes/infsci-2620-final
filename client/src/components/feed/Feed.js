@@ -16,7 +16,7 @@ class Feed extends Component {
       feedContent = <Spinner />;
     } else {
       feedContent = (
-        <>{JSON.stringify(posts)}</>
+        <>{JSON.stringify(posts.data)}</>
       );
     }
 
