@@ -11,6 +11,7 @@ import Navbar from "./components/layout/Navbar";
 import Profile from "./components/profile/Profile";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import Dashboard from "./components/dashboard/Dashboard";
+import Feed from "./components/feed/Feed";
 import { clearCurrentProfile } from "./actions/profileActions";
 import Landing from "./components/layout/Landing";
 import { Provider } from "react-redux";
@@ -51,6 +52,7 @@ class App extends Component {
               <Route exact path="/profile/" component={Profile} />
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <PrivateRoute exact path="/feed" component={Feed} />
               </Switch>
             </div>
           </div>
