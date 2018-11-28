@@ -3,6 +3,8 @@
 const express = require('express');
 const Question = require('../models/Question');
 const User = require('../models/User');
+const Keyword = require('../models/Keyword');
+
 const questionsRouter = express.Router();
 const { verifyToken } = require('../utils/token');
 
@@ -46,23 +48,33 @@ questionsRouter.route('/')
 
 	.post(verifyToken, async (req, res) => {
 
-		const question = new Question();
+		const keywords = req.body.keywordIds || [];
 
+		const question = new Question();		
 		question.title = req.body.title;
 		question.content = req.body.content;
-		question.keywords = req.body.keywords;
 		question.flags = req.body.flags;
 
 		// validation
 		if (!question.title) { return res.status(400).send({ status: 400, statusText: 'The title field is missing.' }); }
 		if (!question.content) { return res.status(400).send({ status: 400, statusText: 'The content field is missing.' }); }
 
+		for (let i=0;i<keywords.length;i++) {
+			try {
+				const _id = await Keyword.findById(keywords[i]);
+				question.keywords.push(_id);
+			} catch (err) {
+				console.log(err);
+				return res.status(500).send({ status: 500, statusText: 'Unable to save keyword.' });
+			}
+		}
+
 		try {
       // get author automatically
       question.author = await User.findById(req.decoded.id);
     } catch (err) {
       console.log(err);
-      return res.status('Unable to establish the author of the question.');
+      return res.status(500).send({ status: 500, statusText: 'Unable to establish the author of the question.' });
 		}
 		
 		try {
@@ -92,6 +104,9 @@ questionsRouter.route('/')
 	});
 
 	// flag question
+	questionsRouter.route('/question/id/:id')
+		.put();
+
   // edit question
   // delete question
 

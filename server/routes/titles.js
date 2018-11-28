@@ -21,7 +21,7 @@ titlesRouter.route('/')
   })
 
   // create new title
-  .post(verifyAdminToken, async (req, res) => {
+  .post(verifyToken, async (req, res) => {
 
     const title = new Title();
     title.description = req.body.description;

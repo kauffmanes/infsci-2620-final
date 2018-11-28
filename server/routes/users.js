@@ -7,8 +7,7 @@ const usersRouter = express.Router();
 const Token = require("../utils/token");
 
 // endpoint: /api/users/register
-usersRouter
-  .route("/register")
+usersRouter.route("/register")
 
   // register new user
   .post(async (req, res) => {
