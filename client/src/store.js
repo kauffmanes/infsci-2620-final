@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 
 // const middleware = [thunk];
+// I commented these out so it doesn't break on browsers that don't have dev tools installed
 const store = createStore(
   rootReducer,
   // initialState,
