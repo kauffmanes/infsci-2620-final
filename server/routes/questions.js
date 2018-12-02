@@ -1,113 +1,139 @@
-'use strict';
+"use strict";
 
-const express = require('express');
-const Question = require('../models/Question');
-const User = require('../models/User');
-const Keyword = require('../models/Keyword');
+const express = require("express");
+const Question = require("../models/Question");
+const User = require("../models/User");
+const Keyword = require("../models/Keyword");
 
 const questionsRouter = express.Router();
-const { verifyToken } = require('../utils/token');
+const { verifyToken } = require("../utils/token");
 
-questionsRouter.route('/')
+questionsRouter
+  .route("/")
 
-	// fetch questions
-	.get(verifyToken, async (req, res) => {
-		
-		const q = req.query.q || ''; // search query
-		const limit = req.query.limit !== 'undefined' ? parseInt(req.query.limit, 10) : 10;
-		
-		// pagination validation
-		if (limit > 100) { limit = 100; } // max of 100 results
-		if (limit < 0) { limit = 0; } // default to 0
-		
-		const offset = req.query.offset !== 'undefined' ?
-			(parseInt(req.query.offset, 10) * limit)
-			: 0 ;
+  // fetch questions
+  .get(verifyToken, async (req, res) => {
+    const q = req.query.q || ""; // search query
+    const limit =
+      req.query.limit !== "undefined" ? parseInt(req.query.limit, 10) : 10;
 
-		const params = q ? { $text: { $search: q } } : {};
+    // pagination validation
+    if (limit > 100) {
+      limit = 100;
+    } // max of 100 results
+    if (limit < 0) {
+      limit = 0;
+    } // default to 0
 
-		try {
+    const offset =
+      req.query.offset !== "undefined"
+        ? parseInt(req.query.offset, 10) * limit
+        : 0;
 
-			const result = await Question
-				.find(params)
-				.populate('answers')
-				.populate('author', 'firstName lastName displayName')
-				.limit(limit)
-				.skip(offset);
+    const params = q ? { $text: { $search: q } } : {};
 
-			return res.status(200).send(result);
+    try {
+      const result = await Question.find(params)
+        .populate("answers")
+        .populate("author", "firstName lastName displayName")
+        .limit(limit)
+        .skip(offset);
 
-		} catch (err) {
-			console.log(err);
-			return res.status(500).send({
-				status: 500,
-				statusText: 'Unable to retrieve questions.'
-			});
-		}
-	})
+      return res.status(200).send(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send({
+        status: 500,
+        statusText: "Unable to retrieve questions."
+      });
+    }
+  })
 
-	.post(verifyToken, async (req, res) => {
+  .post(verifyToken, async (req, res) => {
+    const keywords = req.body.keywordIds || [];
 
-		const keywords = req.body.keywordIds || [];
+    const question = new Question();
+    question.title = req.body.title;
+    question.content = req.body.content;
+    question.flags = req.body.flags;
 
-		const question = new Question();		
-		question.title = req.body.title;
-		question.content = req.body.content;
-		question.flags = req.body.flags;
+    // validation
+    if (!question.title) {
+      return res
+        .status(400)
+        .send({ status: 400, statusText: "The title field is missing." });
+    }
+    if (!question.content) {
+      return res
+        .status(400)
+        .send({ status: 400, statusText: "The content field is missing." });
+    }
 
-		// validation
-		if (!question.title) { return res.status(400).send({ status: 400, statusText: 'The title field is missing.' }); }
-		if (!question.content) { return res.status(400).send({ status: 400, statusText: 'The content field is missing.' }); }
+    for (let i = 0; i < keywords.length; i++) {
+      try {
+        const _id = await Keyword.findById(keywords[i]);
+        question.keywords.push(_id);
+      } catch (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .send({ status: 500, statusText: "Unable to save keyword." });
+      }
+    }
 
-		for (let i=0;i<keywords.length;i++) {
-			try {
-				const _id = await Keyword.findById(keywords[i]);
-				question.keywords.push(_id);
-			} catch (err) {
-				console.log(err);
-				return res.status(500).send({ status: 500, statusText: 'Unable to save keyword.' });
-			}
-		}
-
-		try {
+    try {
       // get author automatically
       question.author = await User.findById(req.decoded.id);
     } catch (err) {
       console.log(err);
-      return res.status(500).send({ status: 500, statusText: 'Unable to establish the author of the question.' });
-		}
-		
-		try {
-			await question.save();
-			return res.status(201).send({
-				status: 201,
-				statusText: 'Question was created.'
-			});
-		} catch (err) {
+      return res.status(500).send({
+        status: 500,
+        statusText: "Unable to establish the author of the question."
+      });
+    }
 
-			if (err.name === 'MongoError' && err.code === 11000) {
+    try {
+      await question.save();
+      return res.status(201).send({
+        status: 201,
+        statusText: "Question was created."
+      });
+    } catch (err) {
+      if (err.name === "MongoError" && err.code === 11000) {
         return res.status(400).send({
           status: 400,
-          statusText: 'That question already exists.'
+          statusText: "That question already exists."
         });
-			}
+      }
 
-			console.log(err);
+      console.log(err);
 
-			return res.status(500).send({
-				status: 500,
-				statusText: 'Unable to save question.'
-			});
-			
-		}
+      return res.status(500).send({
+        status: 500,
+        statusText: "Unable to save question."
+      });
+    }
+  });
 
-	});
+// flag question
+questionsRouter.route("/question/id/:id").put();
 
-	// flag question
-	questionsRouter.route('/question/id/:id')
-		.put();
+// @route   GET api/questions/:id
+// @desc    Get question by id
+// @access  Public
+questionsRouter.get("/:id", (req, res) => {
+  Question.findById(req.params.id)
+    .populate("answers")
+    .populate("author", "firstName lastName displayName")
+    .then(post => res.json(post))
+    .catch(err =>
+      res
+        .status(404)
+        .json({ noquestionfound: "No question found with that ID" })
+    );
+});
 
-  // edit question
-  // delete question
+// edit question
+// delete question
 
-	module.exports = questionsRouter;
+module.exports = questionsRouter;

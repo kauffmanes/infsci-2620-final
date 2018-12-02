@@ -5,7 +5,7 @@ import Register from "./components/register-user/RegisterUser";
 import "./App.css";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-
+import Post from "./components/post/Post";
 import PrivateRoute from "./components/common/PrivateRoute";
 import Navbar from "./components/layout/Navbar";
 import Profile from "./components/profile/Profile";
@@ -53,6 +53,7 @@ class App extends Component {
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <PrivateRoute exact path="/feed" component={Feed} />
+                <PrivateRoute exact path="/post/:id" component={Post} />
               </Switch>
             </div>
           </div>
