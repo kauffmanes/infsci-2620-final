@@ -16,8 +16,12 @@ class AnswerFeed extends Component {
 }
 
 AnswerFeed.propTypes = {
-  answers: PropTypes.array.isRequired,
+  answers: PropTypes.array,
   postId: PropTypes.string.isRequired
+};
+
+AnswerFeed.defaultProps = {
+  answers: []
 };
 
 export default AnswerFeed;

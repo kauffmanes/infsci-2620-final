@@ -162,7 +162,7 @@ usersRouter.get("/me", Token.verifyToken, (req, res) => {
 // @access  Private
 usersRouter.delete("/", Token.verifyToken, (req, res) => {
   User.findOneAndRemove({ _id: req.decoded.id }).then(() =>
-    res.json({ success: true })
+    res.status(200).send({ status: 200, statusText: `Successfully deleted user ${req.decoded.id}.`, success: true })
   );
 });
 

@@ -69,7 +69,7 @@ export const addAnswer = answerData => dispatch => {
 export const getQuestion = id => dispatch => {
   dispatch(setPostLoading());
   axios
-    .get(`/api/questions/${id}`)
+    .get(`/api/questions/id/${id}`)
     .then(
       res =>
         dispatch({

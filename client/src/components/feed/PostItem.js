@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import classnames from "classnames";
+// import classnames from "classnames";
 import { Link } from "react-router-dom";
 //mport { deletePost, addLike, removeLike } from "../../actions/postActions";
 
@@ -73,7 +73,7 @@ class PostItem extends Component {
                   <i className="text-secondary fas fa-thumbs-down" />
                 </button>*/}
                 <Link to={`/post/${post._id}`} className="btn btn-info mr-1">
-                  Answers
+                  View Answers
                 </Link>
                 {post.author && post.author._id === auth.user.id ? (
                   <button

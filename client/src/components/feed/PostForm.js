@@ -81,8 +81,12 @@ class PostForm extends Component {
 PostForm.propTypes = {
   addQuestion: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object
 };
+
+PostForm.defaultProps = {
+  errors: {}
+}
 
 const mapStateToProps = state => ({
   auth: state.auth,

@@ -6,7 +6,7 @@ const User = require("../models/User");
 const Keyword = require("../models/Keyword");
 
 const questionsRouter = express.Router();
-const { verifyToken } = require("../utils/token");
+const { verifyToken, verifyAdminToken, verifyDeveloperToken } = require("../utils/token");
 
 questionsRouter
   .route("/")
@@ -116,24 +116,39 @@ questionsRouter
   });
 
 // flag question
-questionsRouter.route("/question/id/:id").put();
+// questionsRouter.route("/question/id/:id").put();
 
 // @route   GET api/questions/:id
 // @desc    Get question by id
 // @access  Public
-questionsRouter.get("/:id", (req, res) => {
-  Question.findById(req.params.id)
-    .populate("answers")
-    .populate("author", "firstName lastName displayName")
-    .then(post => res.json(post))
-    .catch(err =>
-      res
-        .status(404)
-        .json({ noquestionfound: "No question found with that ID" })
-    );
-});
+questionsRouter.route('/id/:id')
 
-// edit question
-// delete question
+  .get((req, res) => {
+    Question.findById(req.params.id)
+      .populate({
+        path: "answers",
+        populate: ({
+          path: "author",
+          select: "firstName lastName displayName"
+        })
+      })
+      .then(post => res.json(post))
+      .catch(err =>
+        res
+          .status(404)
+          .json({ noquestionfound: "No question found with that ID" })
+      );
+    })
 
+  // delete question
+  .delete(verifyToken, async (req, res) => {
+    Question.findOneAndRemove({ _id: req.params.id }).then(() => {
+      res.status(200).send({ status: 200, statusText: `Successfully deleted question ${req.params.id}.`});
+    }).catch(err => {
+      res.status(500).send(`Unable to delete question ${req.query.id}.`);
+    });
+  });
+
+  // edit question
+  
 module.exports = questionsRouter;

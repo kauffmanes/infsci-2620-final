@@ -46,10 +46,11 @@ class AnswerItem extends Component {
 }
 
 AnswerItem.propTypes = {
-  deleteAnswer: PropTypes.func.isRequired,
+  // deleteAnswer: PropTypes.func.isRequired,
   answer: PropTypes.object.isRequired,
   postId: PropTypes.string.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  author: PropTypes.string
 };
 
 const mapStateToProps = state => ({

@@ -25,7 +25,7 @@ class AnswerForm extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const { user } = this.props.auth;
+    // const { user } = this.props.auth;
     const { postId } = this.props;
 
     const newAnswer = {

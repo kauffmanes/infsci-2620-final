@@ -14,7 +14,7 @@ class PostFeed extends Component {
 }
 
 PostFeed.propTypes = {
-  posts: PropTypes.object.isRequired
+  posts: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.shape()), PropTypes.shape()]).isRequired
 };
 
 export default PostFeed;

@@ -27,13 +27,7 @@ class Navbar extends Component {
           </Link>
         </li>
         <li className="nav-item">
-          <a
-            href=""
-            onClick={this.onLogoutClick.bind(this)}
-            className="nav-link"
-          >
-            Logout
-          </a>
+          <button className="nav-link btn btn-link" type="button" onClick={this.onLogoutClick.bind(this)}>Logout</button>
         </li>
       </ul>
     );
@@ -57,7 +51,7 @@ class Navbar extends Component {
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
         <div className="container">
           <Link className="navbar-brand" to="/">
-            TBD
+            HealthShare
           </Link>
           <button
             className="navbar-toggler"
