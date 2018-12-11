@@ -53,12 +53,13 @@ export const addAnswer = answerData => dispatch => {
   dispatch(clearErrors());
   axios
     .post(`/api/answers`, answerData)
-    .then(res =>
+    .then(res => {
+      console.log(res);
       dispatch({
         type: GET_POST,
         payload: res.data
-      })
-    )
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
