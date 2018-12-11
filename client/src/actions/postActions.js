@@ -43,7 +43,7 @@ export const addQuestion = postData => dispatch => {
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
-        payload: err
+        payload: err.response.data
       })
     );
 };
@@ -63,7 +63,7 @@ export const addAnswer = answerData => dispatch => {
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
-        payload: null
+        payload: err.response.data
       })
     );
 };

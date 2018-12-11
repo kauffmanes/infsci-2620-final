@@ -4,6 +4,8 @@ const express = require("express");
 const Question = require("../models/Question");
 const User = require("../models/User");
 const Keyword = require("../models/Keyword");
+const validator = require("validator");
+const isEmpty = require("./is-empty");
 
 const questionsRouter = express.Router();
 const {
@@ -55,63 +57,62 @@ questionsRouter
 
   .post(verifyToken, async (req, res) => {
     const keywords = req.body.keywordIds || [];
-
+    let errors = {};
     const question = new Question();
     question.title = req.body.title;
     question.content = req.body.content;
     question.flags = req.body.flags;
 
     // validation
-    if (!question.title) {
-      return res
-        .status(400)
-        .send({ status: 400, statusText: "The title field is missing." });
+    if (isEmpty(question.title) || validator.isEmpty(question.title)) {
+      errors.title = "Title field is required";
     }
-    if (!question.content) {
-      return res
-        .status(400)
-        .send({ status: 400, statusText: "The content field is missing." });
+    if (isEmpty(question.content) || validator.isEmpty(question.content)) {
+      errors.content = "Content field is required";
     }
+    if (isEmpty(errors)) {
+      for (let i = 0; i < keywords.length; i++) {
+        try {
+          const _id = await Keyword.findById(keywords[i]);
+          question.keywords.push(_id);
+        } catch (err) {
+          console.log(err);
+          return res
+            .status(500)
+            .send({ status: 500, statusText: "Unable to save keyword." });
+        }
+      }
 
-    for (let i = 0; i < keywords.length; i++) {
       try {
-        const _id = await Keyword.findById(keywords[i]);
-        question.keywords.push(_id);
+        // get author automatically
+        question.author = await User.findById(req.decoded.id);
       } catch (err) {
         console.log(err);
-        return res
-          .status(500)
-          .send({ status: 500, statusText: "Unable to save keyword." });
-      }
-    }
-
-    try {
-      // get author automatically
-      question.author = await User.findById(req.decoded.id);
-    } catch (err) {
-      console.log(err);
-      return res.status(500).send({
-        status: 500,
-        statusText: "Unable to establish the author of the question."
-      });
-    }
-
-    try {
-      question.save().then(question => res.json(question));
-    } catch (err) {
-      if (err.name === "MongoError" && err.code === 11000) {
-        return res.status(400).send({
-          status: 400,
-          statusText: "That question already exists."
+        return res.status(500).send({
+          status: 500,
+          statusText: "Unable to establish the author of the question."
         });
       }
 
-      console.log(err);
+      try {
+        question.save().then(question => res.json(question));
+      } catch (err) {
+        if (err.name === "MongoError" && err.code === 11000) {
+          return res.status(400).send({
+            status: 400,
+            statusText: "That question already exists."
+          });
+        }
 
-      return res.status(500).send({
-        status: 500,
-        statusText: "Unable to save question."
-      });
+        console.log(err);
+
+        return res.status(500).send({
+          status: 500,
+          statusText: "Unable to save question."
+        });
+      }
+    } else {
+      return res.status(400).json(errors);
     }
   });
 
