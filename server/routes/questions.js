@@ -6,7 +6,11 @@ const User = require("../models/User");
 const Keyword = require("../models/Keyword");
 
 const questionsRouter = express.Router();
-const { verifyToken, verifyAdminToken, verifyDeveloperToken } = require("../utils/token");
+const {
+  verifyToken,
+  verifyAdminToken,
+  verifyDeveloperToken
+} = require("../utils/token");
 
 questionsRouter
   .route("/")
@@ -93,11 +97,7 @@ questionsRouter
     }
 
     try {
-      await question.save();
-      return res.status(201).send({
-        status: 201,
-        statusText: "Question was created."
-      });
+      question.save().then(question => res.json(question));
     } catch (err) {
       if (err.name === "MongoError" && err.code === 11000) {
         return res.status(400).send({
@@ -121,16 +121,17 @@ questionsRouter
 // @route   GET api/questions/:id
 // @desc    Get question by id
 // @access  Public
-questionsRouter.route('/id/:id')
+questionsRouter
+  .route("/id/:id")
 
   .get((req, res) => {
     Question.findById(req.params.id)
       .populate({
         path: "answers",
-        populate: ({
+        populate: {
           path: "author",
           select: "firstName lastName displayName"
-        })
+        }
       })
       .then(post => res.json(post))
       .catch(err =>
@@ -138,17 +139,22 @@ questionsRouter.route('/id/:id')
           .status(404)
           .json({ noquestionfound: "No question found with that ID" })
       );
-    })
+  })
 
   // delete question
   .delete(verifyToken, async (req, res) => {
-    Question.findOneAndRemove({ _id: req.params.id }).then(() => {
-      res.status(200).send({ status: 200, statusText: `Successfully deleted question ${req.params.id}.`});
-    }).catch(err => {
-      res.status(500).send(`Unable to delete question ${req.query.id}.`);
-    });
+    Question.findOneAndRemove({ _id: req.params.id })
+      .then(() => {
+        res.status(200).send({
+          status: 200,
+          statusText: `Successfully deleted question ${req.params.id}.`
+        });
+      })
+      .catch(err => {
+        res.status(500).send(`Unable to delete question ${req.query.id}.`);
+      });
   });
 
-  // edit question
-  
+// edit question
+
 module.exports = questionsRouter;

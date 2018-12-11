@@ -7,7 +7,8 @@ import {
   ADD_POST,
   CLEAR_ERRORS,
   GET_POST,
-  POST_LOADING
+  POST_LOADING,
+  DELETE_POST
 } from "./types";
 
 // populate feed
@@ -32,16 +33,17 @@ export const addQuestion = postData => dispatch => {
   dispatch(clearErrors());
   axios
     .post("/api/questions", postData)
-    .then(res =>
+    .then(res => {
+      //console.log(res);
       dispatch({
         type: ADD_POST,
-        payload: res.data
-      })
-    )
+        payload: res
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
-        payload: null
+        payload: err
       })
     );
 };
@@ -82,6 +84,24 @@ export const getQuestion = id => dispatch => {
       dispatch({
         type: GET_POST,
         payload: null
+      })
+    );
+};
+
+// Delete Question
+export const deleteQuestion = id => dispatch => {
+  axios
+    .delete(`/api/questions/id/${id}`)
+    .then(res =>
+      dispatch({
+        type: DELETE_POST,
+        payload: id
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err
       })
     );
 };

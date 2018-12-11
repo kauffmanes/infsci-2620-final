@@ -38,14 +38,16 @@ export default function(state = initialState, action) {
         loading: false
       };
     case ADD_POST:
+      state.posts.data = [action.payload.data, ...state.posts.data];
       return {
-        ...state,
-        posts: [action.payload, ...state.posts]
+        ...state
       };
     case DELETE_POST:
+      state.posts.data = state.posts.data.filter(
+        post => post._id !== action.payload
+      );
       return {
-        ...state,
-        posts: state.posts.filter(post => post._id !== action.payload)
+        ...state
       };
     default:
       return state;
