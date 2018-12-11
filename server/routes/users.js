@@ -5,75 +5,115 @@ const User = require("../models/User");
 const AccessLevel = require("../models/AccessLevel");
 const usersRouter = express.Router();
 const Token = require("../utils/token");
+const validator = require("validator");
+const isEmpty = require("./is-empty");
 
 // endpoint: /api/users/register
-usersRouter.route("/register")
+usersRouter
+  .route("/register")
 
   // register new user
   .post(async (req, res) => {
+    let errors = {};
+
     const user = new User();
 
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
     user.email = req.body.email;
     user.password = req.body.password;
+    const password2 = req.body.password2;
     user.employer = req.body.employer;
     user.title = req.body.titleId;
     user.displayName = req.body.displayName;
     user.accessLevel = req.body.accessLevel;
 
     // do error handling on what's required
-    if (
-      !user.firstName ||
-      !user.lastName ||
-      !user.email ||
-      !user.password ||
-      !user.employer ||
-      //!user.title ||
-      !user.displayName
-    ) {
-      return res.status(400).send("All fields are required.");
+    if (validator.isEmpty(user.firstName)) {
+      errors.firstName = "First name field is required";
+    }
+    if (validator.isEmpty(user.lastName)) {
+      errors.lastName = "Last name field is required";
+    }
+    if (validator.isEmpty(user.displayName)) {
+      errors.displayName = "Display name field is required";
+    }
+    if (validator.isEmpty(user.employer)) {
+      errors.employer = "Employer field is required";
+    }
+    if (validator.isEmpty(user.email)) {
+      errors.email = "Email field is required";
+    }
+    if (!validator.isEmail(user.email)) {
+      errors.email = "Email is invalid";
+    }
+    if (!validator.isLength(user.password, { min: 6, max: 30 })) {
+      errors.password = "Password must be between 6 and 30 characters";
     }
 
-    // if none provided, default to regular user
+    if (validator.isEmpty(user.password)) {
+      errors.password = "Password field is required";
+    }
 
-    try {
-      const accessObj = await AccessLevel.findOne({
-        level: req.body.accessLevel || 1
-      });
+    if (validator.isEmpty(password2)) {
+      errors.password2 = "Confirm Password field is required";
+    }
 
-      user.accessLevel = accessObj;
+    if (!validator.equals(user.password, password2)) {
+      errors.password2 = "Passwords must match";
+    }
+    if (validator.isAlphanumeric(user.password)) {
+      errors.password =
+        "Passwords must contain atleast 1 uppercase, 1 lowercase, 1 digits and 1 special character";
+    }
+    if (validator.isLowercase(user.password)) {
+      errors.password =
+        "Passwords must contain atleast 1 uppercase, 1 lowercase, 1 digits and 1 special character";
+    }
 
-      // save user
-      user.save(err => {
-        if (err && err.name === "MongoError" && err.code === 11000) {
-          return res.status(400).send({
-            status: 400,
-            statusText: "A user with that email or display name already exists."
-          });
-        }
+    if (isEmpty(errors)) {
+      // if none provided, default to regular user
+      try {
+        const accessObj = await AccessLevel.findOne({
+          level: req.body.accessLevel || 1
+        });
 
-        if (err) {
-          console.log(err);
-          return res
-            .status(500)
-            .send({ status: 500, statusText: "Unable to save user." });
-        }
+        user.accessLevel = accessObj;
 
-        return User.findById(user._id, (err, user) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).send({
-              status: 500,
-              statusText: "Could not find newly created user."
+        // save user
+        user.save(err => {
+          if (err && err.name === "MongoError" && err.code === 11000) {
+            return res.status(400).send({
+              status: 400,
+              statusText:
+                "A user with that email or display name already exists."
             });
           }
-          return res.status(201).send(user);
+
+          if (err) {
+            console.log(err);
+            return res
+              .status(500)
+              .send({ status: 500, statusText: "Unable to save user." });
+          }
+
+          return User.findById(user._id, (err, user) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).send({
+                status: 500,
+                statusText: "Could not find newly created user."
+              });
+            }
+            return res.status(201).send(user);
+          });
         });
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).send("Could not find that access level.");
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send("Could not find that access level.");
+      }
+    } else {
+      return res.status(400).json(errors);
     }
   });
 
@@ -85,61 +125,62 @@ usersRouter.route("/register")
   get account by ID
   */
 usersRouter.post("/authenticate", async (req, res) => {
-  if (!req.body.email || !req.body.password) {
-    return res.status(400).send({
-      status: 400,
-      statusText: "An email and password are required"
-    });
+  let errors = {};
+  if (!validator.isEmail(req.body.email)) {
+    errors.email = "Email is invalid";
   }
 
-  try {
-    const user = await User.findOne(
-      { email: req.body.email }, // query
-      { password: 1 } // projection
-    );
+  if (validator.isEmpty(req.body.email)) {
+    errors.email = "Email field is required";
+  }
 
-    if (!user) {
-      return res.status(404).send({
-        status: 404,
-        statusText: "No user was found for that email.",
-        success: false
+  if (validator.isEmpty(req.body.password)) {
+    errors.password = "Password field is required";
+  }
+  const user = await User.findOne(
+    { email: req.body.email }, // query
+    { password: 1 } // projection
+  );
+  if (!user) {
+    errors.email = "User does not exist";
+    return res.status(404).json(errors);
+  }
+  const isValidPassword = user.comparePassword(req.body.password);
+
+  if (!isValidPassword) {
+    errors.password = "Invalid username and password";
+    return res.status(404).json(errors);
+  }
+
+  if (isEmpty(errors)) {
+    try {
+      // set user's permission level (scope)
+      let scope;
+      if (user.accessLevel === 2) {
+        scope = "admin";
+      } else if (user.accessLevel === 3) {
+        scope = "developer";
+      } else {
+        scope = "user";
+      }
+
+      const token = Token.sign({ id: user._id, scope }, { expiresIn: 86400 }); // expires in 24 hours
+
+      return res.status(200).send({
+        success: true,
+        token
+      });
+    } catch (err) {
+      console.log(err);
+
+      return res.status(500).send({
+        success: false,
+        statusText: "Unable to authenticate.",
+        status: 500
       });
     }
-
-    const isValidPassword = user.comparePassword(req.body.password);
-
-    if (!isValidPassword) {
-      return res.status(400).send({
-        status: 400,
-        statusText: "Invalid email/password combination.",
-        success: false
-      });
-    }
-
-    // set user's permission level (scope)
-    let scope;
-    if (user.accessLevel === 2) {
-      scope = "admin";
-    } else if (user.accessLevel === 3) {
-      scope = "developer";
-    } else {
-      scope = "user";
-    }
-
-    const token = Token.sign({ id: user._id, scope }, { expiresIn: 86400 }); // expires in 24 hours
-
-    return res.status(200).send({
-      success: true,
-      token
-    });
-  } catch (err) {
-    console.log(err);
-
-    return res.status(500).send({
-      success: false,
-      statusText: "Unable to authenticate.",
-      status: 500
-    });
+  } else {
+    return res.status(400).json(errors);
   }
 });
 
@@ -162,7 +203,11 @@ usersRouter.get("/me", Token.verifyToken, (req, res) => {
 // @access  Private
 usersRouter.delete("/", Token.verifyToken, (req, res) => {
   User.findOneAndRemove({ _id: req.decoded.id }).then(() =>
-    res.status(200).send({ status: 200, statusText: `Successfully deleted user ${req.decoded.id}.`, success: true })
+    res.status(200).send({
+      status: 200,
+      statusText: `Successfully deleted user ${req.decoded.id}.`,
+      success: true
+    })
   );
 });
 
