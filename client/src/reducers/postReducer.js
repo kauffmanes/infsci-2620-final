@@ -4,7 +4,8 @@ import {
   GET_POST,
   DELETE_POST,
   POST_LOADING,
-  POSTS_LOADING
+  POSTS_LOADING,
+  DELETE_ANSWER
 } from "../actions/types";
 
 const initialState = {
@@ -45,6 +46,13 @@ export default function(state = initialState, action) {
     case DELETE_POST:
       state.posts.data = state.posts.data.filter(
         post => post._id !== action.payload
+      );
+      return {
+        ...state
+      };
+    case DELETE_ANSWER:
+      state.post.answers = state.post.answers.filter(
+        answer => answer._id !== action.payload
       );
       return {
         ...state

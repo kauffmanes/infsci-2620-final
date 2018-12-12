@@ -80,9 +80,22 @@ answersRouter
       statusText: 'Answer was posted.'
     });*/
   });
+// delete answer
+answersRouter.route("/id/:id").delete(verifyToken, async (req, res) => {
+  //onsole.log(req.params);
+  Answer.findOneAndRemove({ _id: req.params.id })
+    .then(() => {
+      res.status(200).send({
+        status: 200,
+        statusText: `Successfully deleted answer ${req.params.id}.`
+      });
+    })
+    .catch(err => {
+      res.status(500).send(`Unable to delete answer ${req.query.id}.`);
+    });
+});
 
 // flag answer
 // edit answer
-// delete answer
 
 module.exports = answersRouter;

@@ -8,7 +8,8 @@ import {
   CLEAR_ERRORS,
   GET_POST,
   POST_LOADING,
-  DELETE_POST
+  DELETE_POST,
+  DELETE_ANSWER
 } from "./types";
 
 // populate feed
@@ -96,6 +97,24 @@ export const deleteQuestion = id => dispatch => {
     .then(res =>
       dispatch({
         type: DELETE_POST,
+        payload: id
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err
+      })
+    );
+};
+
+// Delete Answer
+export const deleteAnswer = id => dispatch => {
+  axios
+    .delete(`/api/answers/id/${id}`)
+    .then(res =>
+      dispatch({
+        type: DELETE_ANSWER,
         payload: id
       })
     )

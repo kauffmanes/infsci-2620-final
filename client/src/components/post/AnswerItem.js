@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-//import { deleteAnswer } from "../../actions/postActions";
+import { deleteAnswer } from "../../actions/postActions";
 
 class AnswerItem extends Component {
   onDeleteClick(postId, answerId) {
-    //this.props.deleteAnswer(postId, answerId);
+    this.props.deleteAnswer(answerId);
   }
 
   render() {
@@ -46,7 +46,7 @@ class AnswerItem extends Component {
 }
 
 AnswerItem.propTypes = {
-  // deleteAnswer: PropTypes.func.isRequired,
+  deleteAnswer: PropTypes.func.isRequired,
   answer: PropTypes.object.isRequired,
   postId: PropTypes.string.isRequired,
   auth: PropTypes.object.isRequired,
@@ -58,6 +58,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(
-  mapStateToProps
-  //{ deleteAnswer }
+  mapStateToProps,
+  { deleteAnswer }
 )(AnswerItem);
