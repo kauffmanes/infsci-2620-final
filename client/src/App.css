@@ -28,6 +28,10 @@ img {
   opacity: 0.9;
 }
 
+.card-body {
+  background: #1531361a;
+}
+
 .latest-profiles-img {
   width: 40px;
   height: 40px;

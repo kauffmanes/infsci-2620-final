@@ -4,6 +4,13 @@ import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 
 class Landing extends Component {
+  
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/feed");
+    }
+  }
+  
   render() {
     return (
       <div className="landing">
@@ -13,7 +20,7 @@ class Landing extends Component {
               <div className="col-md-12 text-center">
                 <h1 className="display-3 mb-4">HealthShare</h1>
                 <p className="lead">
-                  Platform for doctors to share experience and knowledge.
+                  A platform for doctors to share experience and knowledge.
                 </p>
                 {/* <hr /> */}
                 <Link to="/register" className="btn btn-lg btn-info mr-2">
