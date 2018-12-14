@@ -184,6 +184,7 @@ usersRouter.get("/me", Token.verifyToken, (req, res) => {
       res.status(200).send(user);
     })
     .catch(err => {
+      console.log(err);
       res.status(500).send("Unable to find your information");
     });
 });

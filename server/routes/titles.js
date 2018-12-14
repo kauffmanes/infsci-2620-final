@@ -13,6 +13,7 @@ titlesRouter.route('/')
       const result = await Title.find({});
       return res.status(200).send(result);
     } catch (err) {
+      console.log(err);
       return res.status(500).send({
         status: 500,
         statusText: 'Unable to retrieve titles.'
@@ -21,7 +22,7 @@ titlesRouter.route('/')
   })
 
   // create new title
-  .post(verifyToken, async (req, res) => {
+  .post(verifyAdminToken, async (req, res) => {
 
     const title = new Title();
     title.description = req.body.description;

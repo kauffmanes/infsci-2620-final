@@ -5,6 +5,22 @@ const path = require('path');
 const port = process.env.PORT || 3001; // if you change this, change it in package.json in client
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const rateLimit = require("express-rate-limit");
+
+// rate limited
+if (process.env.NODE_ENV === 'production') {
+	
+	// if you're behind a reverse proxy
+	app.enable("trust proxy");
+
+	const limiter = rateLimit({
+		windowMs: 15 * 60 * 1000, // 15 minutes
+		max: 100 // limit each IP to 100 requests per windowMs
+	});
+
+	//  apply to all requests
+	app.use(limiter);
+}
 
 // database
 // const models = require('./models');
@@ -20,11 +36,11 @@ const apiRouter = require('./server/routes');
  * Also talk about middleware and how each request passes through this.
  */
 app.use((_, res, next) => {
-    // only localhost can hit the API
-    res.setHeader('Access-Control-Allow-Origin', 'localhost');
-    res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
-    next();
+	// only localhost can hit the API
+	res.setHeader('Access-Control-Allow-Origin', 'localhost');
+	res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
+	next();
 });
 
 /**
@@ -48,30 +64,30 @@ app.use('/api', apiRouter);
 
 if (process.env.NODE_ENV === 'production') {
 
-    /**
-     * Handles requests for static files. In this case, I'm just saying 
-     * refer these requests to the client frontend.
-     * 
-     * It assumes that the frontend compiled code has been outputted to a folder
-     * named "dist". Depending how the frontend (if we use React, specific structure, etc)
-     * this will change.
-     */
-    app.use(express.static(path.join(__dirname, 'client/build')));
+	/**
+	 * Handles requests for static files. In this case, I'm just saying 
+	 * refer these requests to the client frontend.
+	 * 
+	 * It assumes that the frontend compiled code has been outputted to a folder
+	 * named "dist". Depending how the frontend (if we use React, specific structure, etc)
+	 * this will change.
+	 */
+	app.use(express.static(path.join(__dirname, 'client/build')));
 
-    /**
-     * If the incoming request doesn't match the api path (/api), 
-     * load the frontend index.html page and let frontend handle it.
-     */
-    // app.get('*', (req, res) => {
-    //     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-    // });
-    app.get('*', function (req, res) {
-        console.log(__dirname)
-        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-    });
+	/**
+	 * If the incoming request doesn't match the api path (/api), 
+	 * load the frontend index.html page and let frontend handle it.
+	 */
+	// app.get('*', (req, res) => {
+	//     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+	// });
+	app.get('*', function (req, res) {
+		console.log(__dirname)
+		res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+	});
 }
 
 app.listen(port, err => {
-    if (err) return console.error(err);
-    console.log(`HTTP server listening on port ${port}.`);
+	if (err) return console.error(err);
+	console.log(`HTTP server listening on port ${port}.`);
 });
