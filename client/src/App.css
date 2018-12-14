@@ -12,7 +12,7 @@ img {
 }
 
 .landing-inner {
-  padding-top: 80px;
+  padding-top: 15vh;
 }
 
 .dark-overlay {
@@ -35,4 +35,17 @@ img {
 
 .form-control::placeholder {
   color: #bbb !important;
+}
+
+.jumbotron {
+  color: rgba(0, 0, 0, 0.7);
+  background-image: url("./assets/hero.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+.jumbotron h1 {
+  color: rgba(0, 0, 0, 0.7);
 }

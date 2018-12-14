@@ -7,15 +7,15 @@ class Landing extends Component {
   render() {
     return (
       <div className="landing">
-        <div className="dark-overlay landing-inner text-light">
+        <div className="dark-overlay landing-inner jumbotron">
           <div className="container">
             <div className="row">
               <div className="col-md-12 text-center">
-                <h1 className="display-3 mb-4">TBD</h1>
+                <h1 className="display-3 mb-4">HealthShare</h1>
                 <p className="lead">
                   Platform for doctors to share experience and knowledge.
                 </p>
-                <hr />
+                {/* <hr /> */}
                 <Link to="/register" className="btn btn-lg btn-info mr-2">
                   Sign Up
                 </Link>
