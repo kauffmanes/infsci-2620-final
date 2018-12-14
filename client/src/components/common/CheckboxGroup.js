@@ -4,12 +4,10 @@ import PropTypes from "prop-types";
 
 const CheckBoxGroup = ({
   name,
-  value,
   label,
   error,
   info,
   type,
-  checked,
   onChange,
   disabled
 }) => {
@@ -46,8 +44,7 @@ CheckBoxGroup.propTypes = {
 };
 
 CheckBoxGroup.defaultProps = {
-  type: "text",
-  value: ""
+  type: "checkbox"
 };
 
 export default CheckBoxGroup;

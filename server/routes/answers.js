@@ -82,7 +82,6 @@ answersRouter
   });
 // delete answer
 answersRouter.route("/id/:id").delete(verifyToken, async (req, res) => {
-  //onsole.log(req.params);
   Answer.findOneAndRemove({ _id: req.params.id })
     .then(() => {
       res.status(200).send({

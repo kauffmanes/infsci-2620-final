@@ -48,7 +48,6 @@ class Login extends Component {
   }
   render() {
     const { errors } = this.state;
-    //console.log(errors);
     return (
       <div className="login">
         <div className="container">
@@ -72,7 +71,11 @@ class Login extends Component {
                   onChange={this.onChange}
                   error={errors.password}
                 />
-                <input type="submit" className="btn btn-info btn-block mt-4" value="Submit" />
+                <input
+                  type="submit"
+                  className="btn btn-info btn-block mt-4"
+                  value="Submit"
+                />
               </form>
             </div>
           </div>

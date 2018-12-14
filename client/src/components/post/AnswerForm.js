@@ -25,14 +25,11 @@ class AnswerForm extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    // const { user } = this.props.auth;
     const { postId } = this.props;
 
     const newAnswer = {
       content: this.state.content,
       questionId: postId
-      //name: user.name,
-      //avatar: user.avatar
     };
 
     this.props.addAnswer(newAnswer);

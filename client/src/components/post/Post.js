@@ -16,13 +16,11 @@ class Post extends Component {
   render() {
     const { post, loading } = this.props.post;
     let postContent;
-    //console.log(post);
-    //console.log(this.props.match.params.id);
+
     if (post === null || loading || Object.keys(post).length === 0) {
       postContent = <Spinner />;
     } else {
       postContent = (
-        //<div>jbkjsa</div>
         <div>
           <PostItem post={post} showActions={false} />
           <AnswerForm postId={post._id} />

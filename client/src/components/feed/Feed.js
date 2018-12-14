@@ -16,10 +16,6 @@ class Feed extends Component {
     if (posts === null || loading) {
       feedContent = <Spinner />;
     } else {
-      /*feedContent = (
-        <>{JSON.stringify(posts.data)}</>
-      );*/
-
       feedContent = <PostFeed posts={posts} />;
     }
 
