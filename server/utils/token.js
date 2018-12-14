@@ -56,7 +56,7 @@ module.exports = {
       }	
       
       // make sure you have your permissions or higher
-      if (decoded.scope !== 'admin' || decoded.scope !== 'developer') {
+      if (decoded.scope < 2) {
         return res.status(401).send({
 					auth: false,
 					message: 'You are unauthorized to perform this action.'
@@ -90,7 +90,8 @@ module.exports = {
       }	
       
       // make sure you have your permissions or higher
-      if (decoded.scope !== 'developer') {
+      if (decoded.scope < 3) {
+        console.log('scope', decoded.scope)
         return res.status(401).send({
 					auth: false,
 					message: 'You are unauthorized to perform this action.'

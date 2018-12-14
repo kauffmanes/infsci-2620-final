@@ -75,7 +75,7 @@ usersRouter
           level: req.body.accessLevel || 1
         });
 
-        user.accessLevel = accessObj;
+        user.accessLevel = accessObj._id;
 
         // save user
         user.save(err => {
@@ -136,7 +136,7 @@ usersRouter.post("/authenticate", async (req, res) => {
   }
   const user = await User.findOne(
     { email: req.body.email }, // query
-    { password: 1 } // projection
+    { password: 1, accessLevel: 1 } // projection
   );
   if (!user) {
     errors.email = "User does not exist";
@@ -152,16 +152,9 @@ usersRouter.post("/authenticate", async (req, res) => {
   if (isEmpty(errors)) {
     try {
       // set user's permission level (scope)
-      let scope;
-      if (user.accessLevel === 2) {
-        scope = "admin";
-      } else if (user.accessLevel === 3) {
-        scope = "developer";
-      } else {
-        scope = "user";
-      }
-
-      const token = Token.sign({ id: user._id, scope }, { expiresIn: 86400 }); // expires in 24 hours
+      console.log(user);
+      const access = await AccessLevel.findById(user.accessLevel);
+      const token = Token.sign({ id: user._id, scope: access.level }, { expiresIn: 86400 }); // expires in 24 hours
 
       return res.status(200).send({
         success: true,
