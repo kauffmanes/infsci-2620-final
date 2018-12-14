@@ -117,14 +117,43 @@ questionsRouter
   });
 
 // flag question
-// questionsRouter.route("/question/id/:id").put();
+questionsRouter.put("/question/id/:id/flag", async (req, res) => {
+  const code = req.body.code;
+  const questionId = req.params.id;
+
+  if (isEmpty(code)) {
+    return res.status(400).send({
+      status: 400,
+      statusText: 'A flag code is required.'
+    });
+  }
+
+  if (isEmpty(questionId)) {
+    return res.status(400).send({
+      status: 400,
+      statusText: 'A question ID is required.'
+    });
+  }
+
+  try {
+    const question = await Question.findById(questionId);
+    question.flags.push(code);
+    await question.save();
+    return res.status(200).send({
+      status: 200,
+      statusText: `Question ${questionId} was flagged.`
+    });
+  } catch(err) {
+    console.log(err);
+    return res.status(500).send('Unable to flag question.')
+  }
+});
 
 // @route   GET api/questions/:id
 // @desc    Get question by id
 // @access  Public
 questionsRouter
   .route("/id/:id")
-
   .get((req, res) => {
     Question.findById(req.params.id)
       .populate({

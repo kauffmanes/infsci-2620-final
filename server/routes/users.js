@@ -29,49 +29,46 @@ usersRouter
     user.accessLevel = req.body.accessLevel;
 
     // do error handling on what's required
-    if (validator.isEmpty(user.firstName)) {
+    if (validator.isEmpty(user.firstName || '')) {
       errors.firstName = "First name field is required";
     }
-    if (validator.isEmpty(user.lastName)) {
+    if (validator.isEmpty(user.lastName || '')) {
       errors.lastName = "Last name field is required";
     }
-    if (validator.isEmpty(user.displayName)) {
+    if (validator.isEmpty(user.displayName || '')) {
       errors.displayName = "Display name field is required";
     }
-    if (validator.isEmpty(user.employer)) {
+    if (validator.isEmpty(user.employer || '')) {
       errors.employer = "Employer field is required";
     }
-    if (validator.isEmpty(user.email)) {
+    if (validator.isEmpty(user.email || '')) {
       errors.email = "Email field is required";
     }
-    if (!validator.isEmail(user.email)) {
+    if (!validator.isEmail(user.email || '')) {
       errors.email = "Email is invalid";
     }
-    if (!validator.isLength(user.password, { min: 6, max: 30 })) {
+    if (!validator.isLength(user.password || '', { min: 6, max: 30 })) {
       errors.password = "Password must be between 6 and 30 characters";
     }
-
-    if (validator.isEmpty(user.password)) {
+    if (validator.isEmpty(user.password || '')) {
       errors.password = "Password field is required";
     }
-
-    if (validator.isEmpty(password2)) {
+    if (validator.isEmpty(password2 || '')) {
       errors.password2 = "Confirm Password field is required";
     }
-
-    if (!validator.equals(user.password, password2)) {
+    if (!validator.equals(user.password || '', password2 || '')) {
       errors.password2 = "Passwords must match";
     }
-    if (validator.isAlphanumeric(user.password)) {
+    if (validator.isAlphanumeric(user.password || '')) {
       errors.password =
         "Passwords must contain atleast 1 uppercase, 1 lowercase, 1 digits and 1 special character";
     }
-    if (validator.isLowercase(user.password)) {
+    if (validator.isLowercase(user.password || '')) {
       errors.password =
         "Passwords must contain atleast 1 uppercase, 1 lowercase, 1 digits and 1 special character";
     }
-
     if (isEmpty(errors)) {
+
       // if none provided, default to regular user
       try {
         const accessObj = await AccessLevel.findOne({
@@ -198,11 +195,31 @@ usersRouter.get("/me", Token.verifyToken, (req, res) => {
     });
 });
 
-// @route   DELETE api/users/
+// @route   DELETE api/users/me
 // @desc    Delete user
 // @access  Private
-usersRouter.delete("/", Token.verifyToken, (req, res) => {
+usersRouter.delete("/me", Token.verifyToken, (req, res) => {
   User.findOneAndRemove({ _id: req.decoded.id }).then(() =>
+    res.status(200).send({
+      status: 200,
+      statusText: `Successfully deleted user ${req.decoded.id}.`,
+      success: true
+    })
+  );
+});
+
+// delete other user
+usersRouter.delete("/id/:id", Token.verifyToken, (req, res) => {
+  const _id = req.params.id;
+
+  if (!_id) {
+    return res.status(400).send({
+      status: 400,
+      statusText: 'A user ID is required.'
+    });
+  }
+
+  User.findOneAndRemove({ _id }).then(() =>
     res.status(200).send({
       status: 200,
       statusText: `Successfully deleted user ${req.decoded.id}.`,
