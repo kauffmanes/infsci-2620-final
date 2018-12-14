@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import isEmpty from "../../validation/is-empty";
+import placeholder from '../../assets/placeholder.jpg';
 
 class ProfileHeader extends Component {
   render() {
@@ -11,11 +12,11 @@ class ProfileHeader extends Component {
           <div className="card card-body bg-dark text-white mb-3">
             <div className="row">
               <div className="col-4 col-md-3 m-auto">
-                {/*<img
+                <img
                   className="rounded-circle"
-                  src={}
-                  alt=""
-                />*/}
+                  src={placeholder}
+                  alt="avatar"
+                />
               </div>
             </div>
             <div className="text-center">

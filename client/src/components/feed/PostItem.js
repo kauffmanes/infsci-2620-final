@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 // import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { deleteQuestion, addLike, removeLike } from "../../actions/postActions";
+import placeholder from '../../assets/placeholder.jpg';
 
 class PostItem extends Component {
   onDeleteClick(id) {
@@ -36,11 +37,11 @@ class PostItem extends Component {
         <div className="row">
           <div className="col-md-2">
             <a href="profile.html">
-              {/*<img
+              <img
                 className="rounded-circle d-none d-md-block"
-                src={post.avatar}
-                alt=""
-              />*/}
+                src={placeholder}
+                alt="profile avatar"
+              />
             </a>
             <br />
             {post.author ? (

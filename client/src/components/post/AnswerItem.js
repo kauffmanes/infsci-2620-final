@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { deleteAnswer } from "../../actions/postActions";
+import placeholder from '../../assets/placeholder.jpg';
 
 class AnswerItem extends Component {
   onDeleteClick(postId, answerId) {
@@ -16,11 +17,11 @@ class AnswerItem extends Component {
         <div className="row">
           <div className="col-md-2">
             <a href="profile.html">
-              {/*<img
+              <img
                 className="rounded-circle d-none d-md-block"
-                src={answer.avatar}
-                alt=""
-              />*/}
+                src={placeholder}
+                alt="profile avatar"
+              />
             </a>
             <br />
             {answer.author != null ? (
