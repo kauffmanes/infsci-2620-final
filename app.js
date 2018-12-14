@@ -9,17 +9,17 @@ const rateLimit = require("express-rate-limit");
 
 // rate limited
 if (process.env.NODE_ENV === 'production') {
-	
+
 	// if you're behind a reverse proxy
 	app.enable("trust proxy");
 
-	const limiter = rateLimit({
+	const apiLimiter = rateLimit({
 		windowMs: 15 * 60 * 1000, // 15 minutes
 		max: 100 // limit each IP to 100 requests per windowMs
 	});
 
 	//  apply to all requests
-	app.use(limiter);
+	app.use('/api', apiLimiter);
 }
 
 // database
