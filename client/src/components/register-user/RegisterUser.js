@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
+import CheckBoxGroup from "../common/CheckboxGroup";
+import TermsandConditions from "../eula/TermsandConditions";
 
 class Register extends Component {
   constructor() {
@@ -17,6 +19,7 @@ class Register extends Component {
       title: "",
       password: "",
       password2: "",
+      tandc: false,
       errors: {}
     };
 
@@ -37,7 +40,11 @@ class Register extends Component {
   }
 
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    if (e.target.type !== "checkbox") {
+      this.setState({ [e.target.name]: e.target.value });
+    } else {
+      this.setState({ tandc: !this.state.tandc });
+    }
   }
 
   onSubmit(e) {
@@ -51,7 +58,8 @@ class Register extends Component {
       displayName: this.state.displayName,
       title: this.state.title,
       password: this.state.password,
-      password2: this.state.password2
+      password2: this.state.password2,
+      tandc: this.state.tandc
     };
 
     this.props.registerUser(newUser, this.props.history);
@@ -61,9 +69,36 @@ class Register extends Component {
 
   render() {
     const { errors } = this.state;
-
     return (
       <div className="register">
+        <div
+          className="modal fade"
+          id="exampleModal"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1>Terms and Conditions</h1>
+
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <TermsandConditions />
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
@@ -128,6 +163,23 @@ class Register extends Component {
                   value={this.state.password2}
                   onChange={this.onChange}
                   error={errors.password2}
+                />
+                {/*<div class="form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="exampleCheck1"
+                  />
+                  <label class="form-check-label" for="exampleCheck1">
+                    I accept the terms and conditions.
+                  </label>
+    </div>*/}
+                <CheckBoxGroup
+                  type="checkbox"
+                  name="tandc"
+                  label="I accept the Terms and Conditions"
+                  onChange={this.onChange}
+                  error={errors.tandc}
                 />
                 <input type="submit" className="btn btn-info btn-block mt-4" />
               </form>
