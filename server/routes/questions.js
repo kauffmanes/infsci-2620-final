@@ -20,7 +20,7 @@ questionsRouter
   // fetch questions
   .get(verifyToken, async (req, res) => {
     const q = req.query.q || ""; // search query
-    const limit =
+    let limit =
       req.query.limit !== "undefined" ? parseInt(req.query.limit, 10) : 10;
 
     // pagination validation
@@ -117,7 +117,7 @@ questionsRouter
   });
 
 // flag question
-questionsRouter.put("/question/id/:id/flag", async (req, res) => {
+questionsRouter.put("/question/id/:id/flag", verifyToken, async (req, res) => {
   const code = req.body.code;
   const questionId = req.params.id;
 
@@ -154,7 +154,7 @@ questionsRouter.put("/question/id/:id/flag", async (req, res) => {
 // @access  Public
 questionsRouter
   .route("/id/:id")
-  .get((req, res) => {
+  .get(verifyToken, (req, res) => {
     Question.findById(req.params.id)
       .populate({
         path: "answers",

@@ -7,8 +7,8 @@ const { verifyToken, verifyDeveloperToken } = require('../utils/token');
 
 accessLevelsRouter.route('/')
 
-  // get all titles
-  .get(verifyToken, async (_, res) => {
+  // get all levels
+  .get(verifyDeveloperToken, async (_, res) => {
     try {
       const result = await AccessLevel.find({});
       return res.status(200).send(result);
