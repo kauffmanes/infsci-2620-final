@@ -25,7 +25,7 @@ const CheckBoxGroup = ({
         disabled={disabled}
       />
       <label className="form-check-label" htmlFor={name}>
-        <a href="" data-toggle="modal" data-target="#exampleModal">
+        <a href="/" data-toggle="modal" data-target="#exampleModal">
           {label}
         </a>
       </label>

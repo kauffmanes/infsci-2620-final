@@ -103,7 +103,9 @@ class Register extends Component {
           <div className="row">
             <div className="col-md-8 m-auto">
               <h1 className="display-4 text-center">Sign Up</h1>
-              <p className="lead text-center">Create your TBD account</p>
+              <p className="lead text-center">
+                Create your HealthShare account
+              </p>
               <form noValidate onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="First Name"
@@ -164,16 +166,6 @@ class Register extends Component {
                   onChange={this.onChange}
                   error={errors.password2}
                 />
-                {/*<div class="form-check">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    id="exampleCheck1"
-                  />
-                  <label class="form-check-label" for="exampleCheck1">
-                    I accept the terms and conditions.
-                  </label>
-    </div>*/}
                 <CheckBoxGroup
                   type="checkbox"
                   name="tandc"
