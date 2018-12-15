@@ -12,6 +12,7 @@ import Profile from "./components/profile/Profile";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import Dashboard from "./components/dashboard/Dashboard";
 import Feed from "./components/feed/Feed";
+import DuoAuth from "./components/auth/DuoAuth";
 import { clearCurrentProfile } from "./actions/profileActions";
 import Landing from "./components/layout/Landing";
 import { Provider } from "react-redux";
@@ -48,6 +49,7 @@ class App extends Component {
             <Route exact path="/" component={Landing} />
             <div className="container">
               <Route exact path="/login" component={Login} />
+              <Route exact path="/duo" component={DuoAuth} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/profile/" component={Profile} />
               <Switch>

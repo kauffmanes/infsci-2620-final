@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import CheckBoxGroup from "../common/CheckboxGroup";
 import TermsandConditions from "../eula/TermsandConditions";
+import Recaptcha from "react-recaptcha";
 
 class Register extends Component {
   constructor() {
@@ -20,11 +21,14 @@ class Register extends Component {
       password: "",
       password2: "",
       tandc: false,
+      isVerified: false,
       errors: {}
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
+    this.verifyRecaptcha = this.verifyRecaptcha.bind(this);
   }
 
   componentDidMount() {
@@ -47,6 +51,15 @@ class Register extends Component {
     }
   }
 
+  recaptchaLoaded() {
+    console.log("Recaptcha loaded");
+  }
+  verifyRecaptcha(response) {
+    if (response) {
+      this.setState({ isVerified: true });
+    }
+  }
+
   onSubmit(e) {
     e.preventDefault();
 
@@ -61,8 +74,11 @@ class Register extends Component {
       password2: this.state.password2,
       tandc: this.state.tandc
     };
-
-    this.props.registerUser(newUser, this.props.history);
+    if (this.state.isVerified) {
+      this.props.registerUser(newUser, this.props.history);
+    } else {
+      alert("Please confirm you are human");
+    }
 
     /**/
   }
@@ -79,7 +95,7 @@ class Register extends Component {
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
-          <div className="modal-dialog" role="document">
+          <div className="modal-dialog modal-lg" role="document">
             <div className="modal-content">
               <div className="modal-header">
                 <h1>Terms and Conditions</h1>
@@ -172,6 +188,12 @@ class Register extends Component {
                   label="I accept the Terms and Conditions"
                   onChange={this.onChange}
                   error={errors.tandc}
+                />
+                <Recaptcha
+                  sitekey="6Lcz9oEUAAAAAJ7rwL2lxUweazn7Enpoxq8tjnwr"
+                  render="explicit"
+                  verifyCallback={this.verifyRecaptcha}
+                  onloadCallback={this.recaptchaLoaded}
                 />
                 <input type="submit" className="btn btn-info btn-block mt-4" />
               </form>

@@ -7,6 +7,8 @@ const usersRouter = express.Router();
 const Token = require("../utils/token");
 const validator = require("validator");
 const isEmpty = require("./is-empty");
+const Config = require("../config/config");
+const duo_web = require("@duosecurity/duo_web");
 
 // endpoint: /api/users/register
 usersRouter
@@ -133,6 +135,7 @@ usersRouter.post("/authenticate", async (req, res) => {
   if (validator.isEmpty(req.body.email)) {
     errors.email = "Email field is required";
   }
+  //console.log(Config.akey);
 
   if (validator.isEmpty(req.body.password)) {
     errors.password = "Password field is required";
@@ -161,10 +164,16 @@ usersRouter.post("/authenticate", async (req, res) => {
         { id: user._id, scope: access.level },
         { expiresIn: 86400 }
       ); // expires in 24 hours
-
+      const sig_request = duo_web.sign_request(
+        Config.ikey,
+        Config.skey,
+        Config.akey,
+        req.body.email
+      );
       return res.status(200).send({
         success: true,
-        token
+        token,
+        sig_request
       });
     } catch (err) {
       console.log(err);
