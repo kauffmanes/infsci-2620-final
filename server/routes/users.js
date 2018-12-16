@@ -9,6 +9,7 @@ const validator = require("validator");
 const isEmpty = require("./is-empty");
 const Config = require("../config/config");
 const duo_web = require("@duosecurity/duo_web");
+const bodyParser = require("body-parser").json();
 
 // endpoint: /api/users/register
 usersRouter
@@ -158,7 +159,7 @@ usersRouter.post("/authenticate", async (req, res) => {
   if (isEmpty(errors)) {
     try {
       // set user's permission level (scope)
-      console.log(user);
+      //console.log(user);
       const access = await AccessLevel.findById(user.accessLevel);
       const token = Token.sign(
         { id: user._id, scope: access.level },
@@ -235,6 +236,18 @@ usersRouter.delete("/id/:id", Token.verifyToken, (req, res) => {
       success: true
     })
   );
+});
+
+usersRouter.post("/duo", (req, res) => {
+  console.log(req.body);
+  /*const sig_response = req.body.sig_response;
+  const authenticated_username = duo_web.verify_response(
+    Config.ikey,
+    Config.skey,
+    Config.akey,
+    sig_response
+  );
+  console.log(authenticated_username);*/
 });
 
 module.exports = usersRouter;

@@ -23,7 +23,13 @@ img {
   width: 100%;
   height: 100%;
 }
-
+#duo_iframe {
+  width: 100%;
+  min-width: 304px;
+  max-width: 620px;
+  height: 330px;
+  border: none;
+}
 .card-form {
   opacity: 0.9;
 }
