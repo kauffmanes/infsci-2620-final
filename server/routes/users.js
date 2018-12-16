@@ -86,11 +86,8 @@ usersRouter
         // save user
         user.save(err => {
           if (err && err.name === "MongoError" && err.code === 11000) {
-            return res.status(400).send({
-              status: 400,
-              statusText:
-                "A user with that email or display name already exists."
-            });
+            errors.email = "A user with that email exists.";
+            return res.status(400).json(errors);
           }
 
           if (err) {
