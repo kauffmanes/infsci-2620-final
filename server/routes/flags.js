@@ -3,12 +3,12 @@
 const express = require('express');
 const Flag = require('../models/Flag');
 const flagsRouter = express.Router();
-const { verifyAdminToken } = require('../utils/token');
+const { verifyAdminToken, verifyToken } = require('../utils/token');
 
 flagsRouter.route('/')
 
   // get all flags
-  .get(async (_, res) => {
+  .get(verifyToken, async (_, res) => {
     try {
       const results = await Flag.find({});
       return res.status(200).send(results);
