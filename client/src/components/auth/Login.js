@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { loginUser } from "../../actions/authActions";
+//import DuoAuth from "./DuoAuth";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
