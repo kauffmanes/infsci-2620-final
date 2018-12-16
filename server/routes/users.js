@@ -7,7 +7,7 @@ const usersRouter = express.Router();
 const Token = require("../utils/token");
 const validator = require("validator");
 const isEmpty = require("./is-empty");
-const Config = require("../config/config");
+const Config = require("../config");
 const duo_web = require("@duosecurity/duo_web");
 const bodyParser = require("body-parser").json();
 
