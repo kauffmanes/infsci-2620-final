@@ -9,9 +9,7 @@ const isEmpty = require("./is-empty");
 
 const questionsRouter = express.Router();
 const {
-  verifyToken,
-  verifyAdminToken,
-  verifyDeveloperToken
+  verifyToken, verifyAdminToken
 } = require("../utils/token");
 
 questionsRouter
@@ -45,7 +43,9 @@ questionsRouter
         .limit(limit)
         .skip(offset);
 
-      return res.status(200).send(result);
+      const filtered = result.filter(q => q.flags.length === 0);
+
+      return res.status(200).send(filtered);
     } catch (err) {
       console.log(err);
       return res.status(500).send({
@@ -117,14 +117,14 @@ questionsRouter
   });
 
 // flag question
-questionsRouter.put("/question/id/:id/flag", verifyToken, async (req, res) => {
-  const code = req.body.code;
+questionsRouter.put("/id/:id/flag/:flagId", verifyToken, async (req, res) => {
+  const flagId = req.params.flagId;
   const questionId = req.params.id;
 
-  if (isEmpty(code)) {
+  if (isEmpty(flagId)) {
     return res.status(400).send({
       status: 400,
-      statusText: 'A flag code is required.'
+      statusText: 'A flag ID is required.'
     });
   }
 
@@ -137,7 +137,7 @@ questionsRouter.put("/question/id/:id/flag", verifyToken, async (req, res) => {
 
   try {
     const question = await Question.findById(questionId);
-    question.flags.push(code);
+    question.flags.push(flagId);
     await question.save();
     return res.status(200).send({
       status: 200,
@@ -147,6 +147,78 @@ questionsRouter.put("/question/id/:id/flag", verifyToken, async (req, res) => {
     console.log(err);
     return res.status(500).send('Unable to flag question.')
   }
+});
+
+questionsRouter.get('/flagged', verifyAdminToken, async (req, res) => {
+  const q = req.query.q || ""; // search query
+  let limit =
+    req.query.limit !== "undefined" ? parseInt(req.query.limit, 10) : 10;
+
+  // pagination validation
+  if (limit > 100) {
+    limit = 100;
+  } // max of 100 results
+  if (limit < 0) {
+    limit = 0;
+  } // default to 0
+
+  const offset =
+    req.query.offset !== "undefined"
+      ? parseInt(req.query.offset, 10) * limit
+      : 0;
+
+  const params = q ? { $text: { $search: q } } : {};
+
+  try {
+    const result = await Question.find(params)
+      .populate("answers")
+      .populate("author", "firstName lastName displayName")
+      .limit(limit)
+      .skip(offset);
+
+    const filtered = result.filter(q => q.flags.length > 0);
+
+    return res.status(200).send(filtered);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      status: 500,
+      statusText: "Unable to retrieve questions."
+    });
+  }
+})
+
+questionsRouter.put('/id/:id/flag/:flagId/clear', verifyAdminToken, async (req, res) => {
+  const flagId = req.params.flagId;
+  const questionId = req.params.id;
+
+  if (isEmpty(flagId)) {
+    return res.status(400).send({
+      status: 400,
+      statusText: 'A flag ID is required.'
+    });
+  }
+
+  if (isEmpty(questionId)) {
+    return res.status(400).send({
+      status: 400,
+      statusText: 'A question ID is required.'
+    });
+  }
+
+  try {
+    const question = await Question.findById(questionId);
+    question.flags = [];
+    await question.save();
+    return res.status(200).send({
+      status: 200,
+      statusText: `Removed flag from question ${questionId}.`
+    });
+  } catch(err) {
+    console.log(err);
+    return res.status(500).send('Unable to flag question.')
+  }
+
 });
 
 // @route   GET api/questions/:id

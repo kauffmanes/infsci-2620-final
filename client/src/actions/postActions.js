@@ -9,7 +9,10 @@ import {
   GET_POST,
   POST_LOADING,
   DELETE_POST,
-  DELETE_ANSWER
+  DELETE_ANSWER,
+  GET_FLAGS,
+  FLAGS_LOADING,
+  FLAG_QUESTION
 } from "./types";
 
 // populate feed
@@ -28,6 +31,23 @@ export const populateFeed = (queryParams = {}) => async dispatch => {
     });
   }
 };
+
+// fetch all of the available flags
+export const populateFlags = () => async dispatch => {
+  dispatch({ type: FLAGS_LOADING });
+  try {
+    const flags = await axios.get('/api/flags');
+    dispatch({
+      type: GET_FLAGS,
+      payload: flags
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: null
+    });
+  }
+}
 
 //add Question
 export const addQuestion = postData => dispatch => {
@@ -106,6 +126,19 @@ export const deleteQuestion = id => dispatch => {
         payload: err
       })
     );
+};
+
+export const flagQuestion = (questionId, flagId, history) => async dispatch => {
+  axios.put(`/api/questions/id/${questionId}/flag/${flagId}`).then(res => {
+    console.log(res);
+    if (window.location.href.indexOf('feed') < 0) {
+      history.push('/feed');
+    }
+    dispatch({
+      type: FLAG_QUESTION,
+      payload: questionId
+    });
+  }).catch(err => console.log(err));
 };
 
 // Delete Answer

@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import PostItem from "./PostItem";
-
 class PostFeed extends Component {
   render() {
-    const { posts } = this.props;
+    const { posts, flags  } = this.props;
     if (posts.data != null) {
-      return posts.data.map(post => <PostItem key={post._id} post={post} />);
+      return posts.data.map(post => <PostItem key={post._id} post={post} flags={flags} />);
     } else {
       return null;
     }

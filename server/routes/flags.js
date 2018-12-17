@@ -8,7 +8,7 @@ const { verifyAdminToken, verifyToken } = require('../utils/token');
 flagsRouter.route('/')
 
   // get all flags
-  .get(verifyToken, async (_, res) => {
+  .get(async (_, res) => {
     try {
       const results = await Flag.find({});
       return res.status(200).send(results);
