@@ -59,3 +59,11 @@ img {
 .jumbotron h1 {
   color: rgba(0, 0, 0, 0.7);
 }
+
+.flag {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}

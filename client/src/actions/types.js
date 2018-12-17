@@ -13,3 +13,6 @@ export const GET_POST = "GET_POST";
 export const ADD_POST = "ADD_POST";
 export const DELETE_POST = "DELETE_POST";
 export const DELETE_ANSWER = "DELETE_ANSWER";
+export const FLAGS_LOADING = 'FLAGS_LOADING';
+export const GET_FLAGS = 'GET_FLAGS';
+export const FLAG_QUESTION = 'FLAG_QUESTION';

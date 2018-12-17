@@ -6,15 +6,16 @@ import PostItem from "../feed/PostItem";
 import AnswerForm from "./AnswerForm";
 import AnswerFeed from "./AnswerFeed";
 import Spinner from "../common/Spinner";
-import { getQuestion } from "../../actions/postActions";
+import { getQuestion, populateFlags } from "../../actions/postActions";
 
 class Post extends Component {
   componentDidMount() {
     this.props.getQuestion(this.props.match.params.id);
+    this.props.populateFlags();
   }
 
   render() {
-    const { post, loading } = this.props.post;
+    const { post, loading, flags } = this.props.post;
     let postContent;
 
     if (post === null || loading || Object.keys(post).length === 0) {
@@ -22,7 +23,7 @@ class Post extends Component {
     } else {
       postContent = (
         <div>
-          <PostItem post={post} showActions={false} />
+          <PostItem history={this.props.history} post={post} showActions={false} flags={flags} />
           <AnswerForm postId={post._id} />
           <AnswerFeed postId={post._id} answers={post.answers} />
         </div>
@@ -57,5 +58,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getQuestion }
+  { getQuestion, populateFlags }
 )(Post);

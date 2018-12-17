@@ -5,13 +5,18 @@ import {
   DELETE_POST,
   POST_LOADING,
   POSTS_LOADING,
-  DELETE_ANSWER
+  DELETE_ANSWER,
+  FLAG_QUESTION,
+  GET_FLAGS,
+  FLAGS_LOADING
 } from "../actions/types";
 
 const initialState = {
   posts: [],
   post: {},
-  loading: false
+  loading: false,
+  flagsLoading: false,
+  flags: {}
 };
 
 export default function(state = initialState, action) {
@@ -32,6 +37,17 @@ export default function(state = initialState, action) {
         posts: action.payload,
         loading: false
       };
+    case FLAGS_LOADING:
+      return {
+        ...state,
+        flagsLoading: true
+      };
+    case GET_FLAGS:
+      return {
+        ...state,
+        flags: action.payload,
+        flagsLoading: false
+      };
     case GET_POST:
       return {
         ...state,
@@ -43,6 +59,11 @@ export default function(state = initialState, action) {
       return {
         ...state
       };
+    case FLAG_QUESTION:
+      state.posts.data = state.posts.data.filter(
+        post => post._id !== action.payload
+      );
+      return { ...state };
     case DELETE_POST:
       state.posts.data = state.posts.data.filter(
         post => post._id !== action.payload
