@@ -133,7 +133,6 @@ usersRouter.post("/authenticate", async (req, res) => {
   if (validator.isEmpty(req.body.email)) {
     errors.email = "Email field is required";
   }
-  //console.log(Config.akey);
 
   if (validator.isEmpty(req.body.password)) {
     errors.password = "Password field is required";
@@ -240,15 +239,27 @@ usersRouter.delete("/id/:id", Token.verifyToken, (req, res) => {
 });
 
 usersRouter.post("/duo", (req, res) => {
-  console.log(req.body);
+
+  console.log(req.body.sig_response);
   const sig_response = req.body.sig_response;
+  
+
+  if (!sig_response) {
+    return res.status(400).send({ status: 400, statusText: 'Missing Duo token' });
+  }
+
   const authenticated_username = duo_web.verify_response(
     Config.IKey,
     Config.SKey,
     Config.AKey,
     sig_response
   );
-  console.log(authenticated_username);
+
+  if (authenticated_username) {
+    return res.status(200).send({ status: 200, statusText: `${authenticated_username} has been authenticated.`});
+  } else {
+    return res.status(500).send('Unable to authenticate user.');
+  }
 });
 
 module.exports = usersRouter;
