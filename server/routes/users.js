@@ -162,12 +162,20 @@ usersRouter.post("/authenticate", async (req, res) => {
         { id: user._id, scope: access.level },
         { expiresIn: 86400 }
       ); // expires in 24 hours
+
+      console.log('ikey', Config.IKey);
+      console.log('skey', Config.SKey);
+      console.log('akey', Config.AKey);
+      console.log('email', req.body.email);
+
       const sig_request = duo_web.sign_request(
         Config.ikey,
         Config.skey,
         Config.akey,
         req.body.email
       );
+
+      console.log('sig req', sig_request);
       return res.status(200).send({
         success: true,
         token,

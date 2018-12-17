@@ -3,7 +3,7 @@
 const express = require('express');
 const Keyword = require('../models/Keyword');
 const keywordsRouter = express.Router();
-const { verifyToken, verifyAdminToken } = require('../utils/token');
+const { verifyToken, verifyDeveloperToken } = require('../utils/token');
 
 keywordsRouter.route('/')
 
@@ -23,7 +23,7 @@ keywordsRouter.route('/')
   // get keywords based on search query
 
   // create new keyword
-  .post(verifyToken, async (req, res) => {
+  .post(verifyDeveloperToken, async (req, res) => {
 
     const keyword = new Keyword();
     keyword.description = req.body.description;
@@ -65,7 +65,7 @@ keywordsRouter.route('/')
   });
 
   keywordsRouter.route('/id/:id')
-    .delete(verifyToken, async (req, res) => {
+    .delete(verifyDeveloperToken, async (req, res) => {
       
       if (!req.params.id) { return res.status(400).send({ status: 400, statusText: 'A keyword ID is required.' }); }
       
