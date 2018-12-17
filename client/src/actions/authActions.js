@@ -2,33 +2,54 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
-import { GET_ERRORS, SET_CURRENT_USER } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, CLEAR_ERRORS } from "./types";
+
+export const login2FA = () => dispatch => {
+  const decoded = jwt_decode(localStorage.getItem("jwtToken"));
+  //console.log(decoded);
+
+  dispatch(setCurrentUser(decoded));
+};
 
 // Login - Get User Token
 export const loginUser = userData => dispatch => {
-  axios
-    .post("/api/users/authenticate", userData)
-    .then(res => {
-      //console.log(res);
-      // Save to localStorage
-      const { token } = res.data;
-      const { sig_request } = res.data;
-      // Set token to ls
-      localStorage.setItem("jwtToken", token);
-      localStorage.setItem("sig_request", sig_request);
-      // Set token to Auth header
-      setAuthToken(token);
-      // Decode token to get user data
-      const decoded = jwt_decode(token);
-      // Set current user
-      dispatch(setCurrentUser(decoded));
-    })
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
+  return new Promise((resolve, reject) => {
+    let errors = true;
+    axios
+      .post("/api/users/authenticate", userData)
+      .then(res => {
+        //console.log(res);
+        // Save to localStorage
+        const { token } = res.data;
+        const { sig_request } = res.data;
+        // Set token to ls
+        localStorage.setItem("jwtToken", token);
+        localStorage.setItem("sig_request", sig_request);
+        // Set token to Auth header
+        setAuthToken(localStorage.getItem("jwtToken"));
+        // Decode token to get user data
+        //const decoded = jwt_decode(token);
+        // Set current user
+        //dispatch(setCurrentUser(decoded));
+
+        dispatch(clearErrors());
+        //dispatch(setCurrentUser({}));
+        resolve();
       })
-    );
+      .catch(err => {
+        errors = true;
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        });
+        reject();
+      });
+    /*if (!errors) {
+      return resolve();
+    } else {
+      return reject();
+    }*/
+  });
 };
 
 // Register User
@@ -61,4 +82,11 @@ export const logoutUser = () => dispatch => {
   setAuthToken(false);
   // Set current user to {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
+};
+
+// Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
+  };
 };

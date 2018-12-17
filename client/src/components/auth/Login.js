@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { loginUser } from "../../actions/authActions";
 //import DuoAuth from "./DuoAuth";
+import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import isEmpty from "../../validation/is-empty";
 
 class Login extends Component {
   constructor() {
@@ -19,19 +21,19 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/duo");
-    }
+    //this.state.errors
+    //this.props.history.push("/duo");
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push("/duo");
-    }
-
+    //console.log(nextProps);
+    //console.log(isEmpty(nextProps.errors));
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
+    /*if (isEmpty(nextProps.errors)) {
+      this.props.history.push("/duo");
+    }*/
   }
 
   onSubmit(e) {
@@ -42,7 +44,18 @@ class Login extends Component {
       password: this.state.password
     };
 
-    this.props.loginUser(userData);
+    this.props
+      .loginUser(userData)
+      .then(res => {
+        if (isEmpty(this.state.errors)) {
+          this.props.history.push("/duo");
+        }
+      })
+      .catch(err => {
+        console.log(this.state.errors);
+      });
+
+    /**/
   }
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
