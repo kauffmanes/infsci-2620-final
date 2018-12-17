@@ -255,6 +255,7 @@
     }
 
     // if we were given an iframe, no need to wait for the rest of the DOM
+    // added false because we always want to build a new one - no caching
     if (false && iframe) {
       ready();
     } else {
