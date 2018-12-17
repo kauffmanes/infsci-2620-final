@@ -6,8 +6,6 @@ import { GET_ERRORS, SET_CURRENT_USER, CLEAR_ERRORS } from "./types";
 
 export const login2FA = () => dispatch => {
   const decoded = jwt_decode(localStorage.getItem("jwtToken"));
-  //console.log(decoded);
-
   dispatch(setCurrentUser(decoded));
 };
 
@@ -17,7 +15,6 @@ export const loginUser = userData => dispatch => {
     axios
       .post("/api/users/authenticate", userData)
       .then(res => {
-        //console.log(res);
         // Save to localStorage
         const { token } = res.data;
         const { sig_request } = res.data;
@@ -26,10 +23,6 @@ export const loginUser = userData => dispatch => {
         localStorage.setItem("sig_request", sig_request);
         // Set token to Auth header
         setAuthToken(localStorage.getItem("jwtToken"));
-        // Decode token to get user data
-        //const decoded = jwt_decode(token);
-        // Set current user
-        //dispatch(setCurrentUser(decoded));
 
         dispatch(clearErrors());
         //dispatch(setCurrentUser({}));
@@ -42,11 +35,6 @@ export const loginUser = userData => dispatch => {
         });
         reject();
       });
-    /*if (!errors) {
-      return resolve();
-    } else {
-      return reject();
-    }*/
   });
 };
 
