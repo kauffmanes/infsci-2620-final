@@ -255,7 +255,7 @@
     }
 
     // if we were given an iframe, no need to wait for the rest of the DOM
-    if (iframe) {
+    if (false && iframe) {
       ready();
     } else {
       // try to find the iframe in the DOM
