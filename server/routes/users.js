@@ -163,11 +163,6 @@ usersRouter.post("/authenticate", async (req, res) => {
         { expiresIn: 86400 }
       ); // expires in 24 hours
 
-      console.log('ikey', Config.IKey);
-      console.log('skey', Config.SKey);
-      console.log('akey', Config.AKey);
-      console.log('email', req.body.email);
-
       const sig_request = duo_web.sign_request(
         Config.IKey,
         Config.SKey,
