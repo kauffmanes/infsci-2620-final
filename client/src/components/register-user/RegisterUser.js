@@ -195,7 +195,11 @@ class Register extends Component {
                   verifyCallback={this.verifyRecaptcha}
                   onloadCallback={this.recaptchaLoaded}
                 />
-                <input type="submit" className="btn btn-info btn-block mt-4" value="Sign Up"/>
+                <input
+                  type="submit"
+                  className="btn btn-info btn-block mt-4"
+                  value="Sign Up"
+                />
               </form>
             </div>
           </div>
