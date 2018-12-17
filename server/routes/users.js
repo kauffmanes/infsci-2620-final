@@ -235,6 +235,9 @@ usersRouter.delete("/id/:id", Token.verifyToken, (req, res) => {
   );
 });
 
+// @route   DELETE api/users/duo
+// @desc    Verify DUO Response
+// @access  Public
 usersRouter.post("/duo", (req, res) => {
   console.log(req.body);
   /*const sig_response = req.body.sig_response;
