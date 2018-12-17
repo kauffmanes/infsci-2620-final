@@ -14,7 +14,6 @@ export const login2FA = () => dispatch => {
 // Login - Get User Token
 export const loginUser = userData => dispatch => {
   return new Promise((resolve, reject) => {
-    let errors = true;
     axios
       .post("/api/users/authenticate", userData)
       .then(res => {
@@ -37,7 +36,6 @@ export const loginUser = userData => dispatch => {
         resolve();
       })
       .catch(err => {
-        errors = true;
         dispatch({
           type: GET_ERRORS,
           payload: err.response.data
