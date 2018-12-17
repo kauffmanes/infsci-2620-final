@@ -169,9 +169,9 @@ usersRouter.post("/authenticate", async (req, res) => {
       console.log('email', req.body.email);
 
       const sig_request = duo_web.sign_request(
-        Config.ikey,
-        Config.skey,
-        Config.akey,
+        Config.IKey,
+        Config.SKey,
+        Config.AKey,
         req.body.email
       );
 
