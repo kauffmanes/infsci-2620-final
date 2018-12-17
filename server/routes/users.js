@@ -176,6 +176,7 @@ usersRouter.post("/authenticate", async (req, res) => {
       );
 
       console.log('sig req', sig_request);
+      
       return res.status(200).send({
         success: true,
         token,
@@ -248,14 +249,14 @@ usersRouter.delete("/id/:id", Token.verifyToken, (req, res) => {
 // @access  Public
 usersRouter.post("/duo", (req, res) => {
   console.log(req.body);
-  /*const sig_response = req.body.sig_response;
+  const sig_response = req.body.sig_response;
   const authenticated_username = duo_web.verify_response(
-    Config.ikey,
-    Config.skey,
-    Config.akey,
+    Config.IKey,
+    Config.SKey,
+    Config.AKey,
     sig_response
   );
-  console.log(authenticated_username);*/
+  console.log(authenticated_username);
 });
 
 module.exports = usersRouter;
